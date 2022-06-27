@@ -1,4 +1,4 @@
-import 'package:cabavenue_drive/pages/signup_login.dart';
+import 'package:cabavenue_drive/pages/auth.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     elevation: 10,
                   ),
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupLogin()));
+                    Navigator.of(context).pushNamed('/auth');
                   },
                   child: const Text('Signup',style: TextStyle(fontSize: 20),),),
               )

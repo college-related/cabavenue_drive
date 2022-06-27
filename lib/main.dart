@@ -1,5 +1,5 @@
+import 'package:cabavenue_drive/pages/auth.dart';
 import 'package:cabavenue_drive/pages/home.dart';
-import 'package:cabavenue_drive/pages/signup_login.dart';
 import 'package:flutter/material.dart';
 
 void main(){
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/':(context) => const MyHomePage(),
-        '/signup-login':(context) => const SignupLogin(),
+        '/auth':(context) => const AuthClass(),
         // '/profile':(context) => ProfilePage(),
       },
     );
