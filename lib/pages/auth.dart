@@ -1,16 +1,14 @@
-// ignore_for_file: unnecessary_const
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class AuthClass extends StatefulWidget {
-  const AuthClass({Key? key}) : super(key: key);
+class AuthPage extends StatefulWidget {
+  const AuthPage({Key? key}) : super(key: key);
 
   @override
-  State<AuthClass> createState() => _AuthClassState();
+  State<AuthPage> createState() => _AuthPageState();
 }
 
-class _AuthClassState extends State<AuthClass> {
+class _AuthPageState extends State<AuthPage> {
   bool isSignup = true;
   callback(){
     setState(() {
@@ -24,7 +22,7 @@ class _AuthClassState extends State<AuthClass> {
   }
 }
 
-// --------------------------Signup Page----------------------------
+// --------------------------------------------------------------- SIGNUP PAGE start --------------------------------------------------------
 class SignupScreen extends StatefulWidget {
   const SignupScreen( {Key? key, required this.callback}) : super(key: key);
   final Function callback;
@@ -51,9 +49,8 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin:const EdgeInsets.symmetric( horizontal: 25),
+          margin:const EdgeInsets.symmetric( horizontal: 20, vertical: 10),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text('Create Account', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),),
               Container(
@@ -83,7 +80,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         primary: Colors.white,
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.white,
                         shape:const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
                         side: const BorderSide(color: Colors.blue),
                         padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 30),
@@ -94,9 +91,18 @@ class _SignupScreenState extends State<SignupScreen> {
                         });
                       },
                       child: Row( 
-                        children:const [
-                          Text('Next',style: TextStyle(fontSize: 18),),
-                          Icon(Icons.arrow_forward, color: Colors.white,),
+                        children: [
+                          isFirstScreen? Row(
+                            children: const [
+                              Text('Next',style: TextStyle(fontSize: 18,color: Colors.blue),),
+                              Icon(Icons.arrow_forward, color: Colors.blue,),
+                            ],
+                          ) : Row(
+                            children: const [
+                              Icon(Icons.arrow_back, color: Colors.blue,),
+                              Text('Back',style: TextStyle(fontSize: 18,color: Colors.blue),),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -110,7 +116,9 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 }
+// ---------------------------------------------------------- SIGNUP PAGE end ----------------------------------------------------------------
 
+// --------------------------------------------------- SIGNUP PAGE-> first screen start-------------------------------------------------------
 class FirstPage extends StatefulWidget {
   const FirstPage({
     Key? key,
@@ -175,11 +183,33 @@ class _FirstPageState extends State<FirstPage> {
             ),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              icon: Icon(Icons.lock_rounded, color: Colors.blue,),
+              labelText: 'Enter password',
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              icon: Icon(Icons.lock_outline, color: Colors.blue,),
+              labelText: 'Confirm password',
+            ),
+          ),
+        ),
       ],
     );
   }
 }
+// -------------------------------------------------------- SIGNUP PAGE-> first screen end---------------------------------------------------
 
+// ------------------------------------------------------- SIGNUP PAGE-> second screen start--------------------------------------------------
 class SecondScreen extends StatelessWidget {
   const SecondScreen({Key? key}) : super(key: key);
 
@@ -194,27 +224,25 @@ class SecondScreen extends StatelessWidget {
             
             Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      icon: Icon(Icons.lock_rounded, color: Colors.blue,),
-                      labelText: 'Enter password',
-                    ),
+                const Text('Second page'),
+                const Text('Hello'),
+                Container(
+                margin:const EdgeInsets.symmetric(vertical: 30),
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.blue,
+                    shape:const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+                    side: const BorderSide(color: Colors.blue),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 80),
+                    elevation: 10,
                   ),
+                  onPressed: (){
+                    Navigator.of(context).pushNamed('/auth');
+                  },
+                  child: const Text('Sign up',style: TextStyle(fontSize: 20),),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      icon: Icon(Icons.lock_outline, color: Colors.blue,),
-                      labelText: 'Confirm password',
-                    ),
-                  ),
-                ),
-                
+              ),
               ],
             )
           ],
@@ -222,7 +250,9 @@ class SecondScreen extends StatelessWidget {
       );
   }
 }
+// --------------------------------------------------------- SIGNUP PAGE-> Second screen end--------------------------------------------------
 
+// -------------------------------------------------------------- LOGIN PAGE end -------------------------------------------------------------
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key,required this.callback}) : super(key: key);
   final Function callback;
@@ -230,7 +260,6 @@ class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
-
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
@@ -322,3 +351,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+// ------------------------------------------------------------- LOGIN PAGE end --------------------------------------------------------------
