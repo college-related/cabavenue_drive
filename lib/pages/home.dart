@@ -1,4 +1,3 @@
-import 'package:cabavenue_drive/pages/auth.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
