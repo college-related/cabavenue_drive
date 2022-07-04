@@ -1,8 +1,10 @@
 import 'package:cabavenue_drive/pages/auth.dart';
 import 'package:cabavenue_drive/pages/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main(){
+Future main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -18,8 +20,8 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       routes: {
-        '/':(context) => const MyHomePage(),
-        '/auth':(context) => const AuthPage(),
+        '/': (context) => const MyHomePage(),
+        '/auth': (context) => const AuthPage(),
         // '/profile':(context) => ProfilePage(),
       },
     );
