@@ -1,96 +1,70 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-// ignore: must_be_immutable
 class SecondScreen extends StatefulWidget {
-  SecondScreen({
+  const SecondScreen({
     Key? key,
+    required this.pickCitizen,
+    required this.pickLicense,
+    required this.pickBluebook,
     required this.citizenship,
     required this.bluebook,
     required this.license,
   }) : super(key: key);
 
-  String citizenship;
-  String license;
-  String bluebook;
+  final VoidCallback pickCitizen;
+  final VoidCallback pickLicense;
+  final VoidCallback pickBluebook;
+  final XFile? citizenship;
+  final XFile? license;
+  final XFile? bluebook;
 
   @override
   State<SecondScreen> createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  void pickCitizen() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
+  Widget _handlePreview(XFile? type, String typeText) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: type != null ? 500 : 200,
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+      child: Center(
+        child: type != null
+            ? Image.file(File(type.path))
+            : Text("Add $typeText Image"),
+      ),
     );
-
-    if (result != null) {
-      File file = File(result.files.first.path!);
-      setState(() {
-        widget.citizenship = file.toString();
-      });
-    }
-  }
-
-  void pickLicense() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-
-    if (result != null) {
-      File file = File(result.files.first.path!);
-      setState(() {
-        widget.license = file.toString();
-      });
-    }
-  }
-
-  void pickBluebook() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-
-    if (result != null) {
-      File file = File(result.files.first.path!);
-      setState(() {
-        widget.bluebook = file.toString();
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  pickCitizen();
-                },
-                child: const Text('Upload Citizenship'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  pickBluebook();
-                },
-                child: const Text('Upload License'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  pickBluebook();
-                },
-                child: const Text('Upload Bluebook'),
-              ),
-            ],
-          )
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () {
+            widget.pickCitizen();
+          },
+          child: _handlePreview(widget.citizenship, "Citizenship"),
+        ),
+        GestureDetector(
+          onTap: () {
+            widget.pickLicense();
+          },
+          child: _handlePreview(widget.license, "License"),
+        ),
+        GestureDetector(
+          onTap: () {
+            widget.pickBluebook();
+          },
+          child: _handlePreview(widget.bluebook, "Bluebook"),
+        ),
+      ],
     );
   }
 }

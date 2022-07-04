@@ -1,7 +1,11 @@
+import 'package:cabavenue_drive/helpers/snackbar.dart';
+import 'package:cabavenue_drive/services/auth_service.dart';
 import 'package:cabavenue_drive/widgets/auth/first_page.dart';
 import 'package:cabavenue_drive/widgets/auth/second_page.dart';
+import 'package:cabavenue_drive/widgets/custom_text_field.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -50,10 +54,38 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  final AuthService _authService = AuthService();
 
-  String citizenship = '';
-  String license = '';
-  String bluebook = '';
+  XFile? citizenship;
+  XFile? license;
+  XFile? bluebook;
+  List<XFile?> images = [];
+
+  final ImagePicker _imagePicker = ImagePicker();
+
+  void pickCitizen() async {
+    XFile? citizenImage =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      citizenship = citizenImage;
+    });
+  }
+
+  void pickLicense() async {
+    XFile? licenseImage =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      license = licenseImage;
+    });
+  }
+
+  void pickBluebook() async {
+    XFile? bluebookImage =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      bluebook = bluebookImage;
+    });
+  }
 
   @override
   void dispose() {
@@ -65,6 +97,25 @@ class _SignupScreenState extends State<SignupScreen> {
     _secondaryphoneController.dispose();
     _addressController.dispose();
     _confirmPasswordController.dispose();
+  }
+
+  void signup() {
+    if (_passwordController.text == _confirmPasswordController.text) {
+      _authService.signupDriver(
+        name: _nameController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        secondaryphone: _secondaryphoneController.text,
+        address: _addressController.text,
+        password: _passwordController.text,
+        citizenship: citizenship,
+        license: license,
+        bluebook: bluebook,
+        context: context,
+      );
+    } else {
+      showSnackBar(context, 'Password not matched', true);
+    }
   }
 
   @override
@@ -128,9 +179,12 @@ class _SignupScreenState extends State<SignupScreen> {
                         secondaryphoneController: _secondaryphoneController,
                       )
                     : SecondScreen(
+                        pickCitizen: pickCitizen,
+                        pickLicense: pickLicense,
+                        pickBluebook: pickBluebook,
                         citizenship: citizenship,
-                        license: license,
                         bluebook: bluebook,
+                        license: license,
                       ),
               ),
               Container(
@@ -206,7 +260,9 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
                             onPressed: () {
-                              Navigator.of(context).pushNamed('/auth');
+                              if (_signupFormKey.currentState!.validate()) {
+                                signup();
+                              }
                             },
                             child: const Text(
                               'Sign up',
@@ -234,6 +290,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _phonecontroller = TextEditingController();
+  final TextEditingController _passwordcontroller = TextEditingController();
+  final _loginFormKey = GlobalKey<FormState>();
+  final AuthService _authService = AuthService();
+
+  void login() {
+    _authService.loginDriver(
+      context: context,
+      phone: _phonecontroller.text,
+      password: _passwordcontroller.text,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -250,95 +319,91 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         body: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-            child: Column(
-              children: [
-                const Image(
-                    image: AssetImage(
-                        'assets/images/location-style-1-rounded.jpg')),
-                const Text(
-                  'Cabavenue',
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),
-                ),
-                const Text('Welcome back!'),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Phone number',
-                      icon: Icon(
-                        Icons.call_rounded,
-                        color: Colors.blue,
+          child: Form(
+            key: _loginFormKey,
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+              child: Column(
+                children: [
+                  const Image(
+                      image: AssetImage(
+                          'assets/images/location-style-1-rounded.jpg')),
+                  const Text(
+                    'Cabavenue',
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),
+                  ),
+                  const Text('Welcome back!'),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CustomTextField(
+                      controller: _phonecontroller,
+                      hintText: 'Phone number',
+                      icon: Icons.call_rounded,
+                      keyboardType: TextInputType.number,
+                      borderType: 'under;ine',
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CustomTextField(
+                      controller: _passwordcontroller,
+                      hintText: 'Password',
+                      icon: Icons.lock_rounded,
+                      isSecureText: true,
+                      borderType: 'underline',
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 30),
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        primary: Colors.white,
+                        backgroundColor: Colors.blue,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        side: const BorderSide(color: Colors.blue),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 80),
+                        elevation: 10,
+                      ),
+                      onPressed: () {
+                        login();
+                      },
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(fontSize: 20),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      icon: Icon(
-                        Icons.lock_rounded,
-                        color: Colors.blue,
-                      ),
-                      labelText: 'Enter password',
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle:
+                          const TextStyle(fontSize: 15, color: Colors.blue),
                     ),
+                    onPressed: () {},
+                    child: const Text('Forgot Password?'),
                   ),
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 30),
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      primary: Colors.white,
-                      backgroundColor: Colors.blue,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      side: const BorderSide(color: Colors.blue),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 80),
-                      elevation: 10,
+                  RichText(
+                      text: TextSpan(children: [
+                    const TextSpan(
+                      text: 'Don\'t have an account?',
+                      style: TextStyle(color: Colors.black54, fontSize: 16),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/auth');
-                    },
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle:
-                        const TextStyle(fontSize: 15, color: Colors.blue),
-                  ),
-                  onPressed: () {},
-                  child: const Text('Forgot Password?'),
-                ),
-                RichText(
-                    text: TextSpan(children: [
-                  const TextSpan(
-                    text: 'Don\'t have an account?',
-                    style: TextStyle(color: Colors.black54, fontSize: 16),
-                  ),
-                  TextSpan(
-                      text: 'Register',
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.blue),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          widget.callback();
-                        }),
-                ])),
-              ],
+                    TextSpan(
+                        text: 'Register',
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.blue),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            widget.callback();
+                          }),
+                  ])),
+                ],
+              ),
             ),
           ),
         ));
   }
 }
-// ------------------------------------------------------------- LOGIN PAGE end --------------------------------------------------------------
