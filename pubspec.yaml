@@ -13,8 +13,9 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  file_picker: ^4.6.1
   http: ^0.13.4
+  flutter_dotenv: ^5.0.2
+  image_picker: ^0.8.5+3
 
 dev_dependencies:
   flutter_test:
@@ -28,6 +29,7 @@ flutter:
 
   assets:
     - assets/images/location-style-1-rounded.jpg
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
