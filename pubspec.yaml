@@ -16,12 +16,19 @@ dependencies:
   http: ^0.13.4
   flutter_dotenv: ^5.0.2
   image_picker: ^0.8.5+3
+  flutter_secure_storage: ^5.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^2.0.0
+  
+  flutter_launcher_icons: ^0.9.3
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
 
 flutter:
 
