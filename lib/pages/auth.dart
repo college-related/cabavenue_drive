@@ -15,7 +15,7 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  bool isSignup = true;
+  bool isSignup = false;
   callback() {
     setState(() {
       isSignup = !isSignup;
@@ -122,158 +122,149 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios_new),
-          color: Colors.black,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            children: [
-              const Text(
-                'Create Account',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
-              ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: RichText(
-                  text: TextSpan(children: [
-                    const TextSpan(
-                        text:
-                            'Enter your Name, Email, Phone number, Documents photo and Password for sign up.',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.grey)),
-                    TextSpan(
-                        text: 'Already have account?',
-                        style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.blue),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            widget.callback();
-                          }),
-                  ]),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Column(
+              children: [
+                const Text(
+                  'Create Account',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
                 ),
-              ),
-              Form(
-                key: _signupFormKey,
-                child: isFirstScreen
-                    ? FirstPage(
-                        nameController: _nameController,
-                        emailController: _emailController,
-                        passwordController: _passwordController,
-                        phoneController: _phoneController,
-                        confirmpasswordController: _confirmPasswordController,
-                        addressController: _addressController,
-                        secondaryphoneController: _secondaryphoneController,
-                      )
-                    : SecondScreen(
-                        pickCitizen: pickCitizen,
-                        pickLicense: pickLicense,
-                        pickBluebook: pickBluebook,
-                        citizenship: citizenship,
-                        bluebook: bluebook,
-                        license: license,
-                      ),
-              ),
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.symmetric(vertical: 20),
-                child: Row(
-                  mainAxisAlignment: isFirstScreen
-                      ? MainAxisAlignment.end
-                      : MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 125,
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          primary: Colors.white,
-                          backgroundColor: Colors.white,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          side: const BorderSide(color: Colors.blue),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 30),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: RichText(
+                    text: TextSpan(children: [
+                      const TextSpan(
+                          text:
+                              'Enter your Name, Email, Phone number, Documents photo and Password for sign up.',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey)),
+                      TextSpan(
+                          text: 'Already have account?',
+                          style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.blue),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              widget.callback();
+                            }),
+                    ]),
+                  ),
+                ),
+                Form(
+                  key: _signupFormKey,
+                  child: isFirstScreen
+                      ? FirstPage(
+                          nameController: _nameController,
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                          phoneController: _phoneController,
+                          confirmpasswordController: _confirmPasswordController,
+                          addressController: _addressController,
+                          secondaryphoneController: _secondaryphoneController,
+                        )
+                      : SecondScreen(
+                          pickCitizen: pickCitizen,
+                          pickLicense: pickLicense,
+                          pickBluebook: pickBluebook,
+                          citizenship: citizenship,
+                          bluebook: bluebook,
+                          license: license,
                         ),
-                        onPressed: () {
-                          setState(() {
-                            isFirstScreen = !isFirstScreen;
-                          });
-                        },
-                        child: isFirstScreen
-                            ? Row(
-                                children: const [
-                                  Text(
-                                    'Next',
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.blue),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.blue,
-                                  ),
-                                ],
-                              )
-                            : Row(
-                                children: const [
-                                  Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.blue,
-                                  ),
-                                  Text(
-                                    'Back',
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.blue),
-                                  ),
-                                ],
-                              ),
-                      ),
-                    ),
-                    !isFirstScreen
-                        ? OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              primary: Colors.white,
-                              backgroundColor: Colors.blue,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                              ),
-                              side: const BorderSide(
-                                color: Colors.blue,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8,
-                                horizontal: 30,
-                              ),
-                            ),
-                            onPressed: () {
-                              if (_signupFormKey.currentState!.validate()) {
-                                signup();
-                              }
-                            },
-                            child: const Text(
-                              'Sign up',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          )
-                        : Container(),
-                  ],
                 ),
-              ),
-            ],
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(vertical: 20),
+                  child: Row(
+                    mainAxisAlignment: isFirstScreen
+                        ? MainAxisAlignment.end
+                        : MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 125,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            primary: Colors.white,
+                            backgroundColor: Colors.white,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            side: const BorderSide(color: Colors.blue),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 30),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isFirstScreen = !isFirstScreen;
+                            });
+                          },
+                          child: isFirstScreen
+                              ? Row(
+                                  children: const [
+                                    Text(
+                                      'Next',
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.blue),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: Colors.blue,
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  children: const [
+                                    Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.blue,
+                                    ),
+                                    Text(
+                                      'Back',
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.blue),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                      !isFirstScreen
+                          ? OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                primary: Colors.white,
+                                backgroundColor: Colors.blue,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                ),
+                                side: const BorderSide(
+                                  color: Colors.blue,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 30,
+                                ),
+                              ),
+                              onPressed: () {
+                                if (_signupFormKey.currentState!.validate()) {
+                                  signup();
+                                }
+                              },
+                              child: const Text(
+                                'Sign up',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -306,19 +297,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back_ios_new),
-            color: Colors.black,
-          ),
-        ),
-        body: SingleChildScrollView(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Form(
             key: _loginFormKey,
             child: Container(
@@ -404,6 +385,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

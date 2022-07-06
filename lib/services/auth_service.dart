@@ -5,6 +5,7 @@ import 'package:cabavenue_drive/helpers/error_handler.dart';
 import 'package:cabavenue_drive/helpers/snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
@@ -48,37 +49,48 @@ class AuthService {
           },
         );
 
-        var id = jsonDecode(value.body)['user']['id'];
-        var request = http.MultipartRequest(
-            "POST", Uri.parse('http://$url/v1/documents/upload/$id'));
+        if (jsonDecode(value.body)['user']['id'] != null) {
+          const FlutterSecureStorage().write(
+              key: "CABAVENUE_USERDATA",
+              value: jsonDecode(value.body).toString());
 
-        List<http.MultipartFile> imageList = [];
+          var id = jsonDecode(value.body)['user']['id'];
+          var request = http.MultipartRequest(
+              "POST", Uri.parse('http://$url/v1/documents/upload/$id'));
 
-        http.MultipartFile citizenshipMultipart = http.MultipartFile(
-            'documents',
-            File(citizenship!.path).readAsBytes().asStream(),
-            File(citizenship.path).lengthSync(),
-            filename: citizenship.path.split("/").last);
-        imageList.add(citizenshipMultipart);
+          List<http.MultipartFile> imageList = [];
 
-        http.MultipartFile licenseMultipart = http.MultipartFile(
-            'documents',
-            File(license!.path).readAsBytes().asStream(),
-            File(license.path).lengthSync(),
-            filename: license.path.split("/").last);
-        imageList.add(licenseMultipart);
+          http.MultipartFile citizenshipMultipart = http.MultipartFile(
+              'documents',
+              File(citizenship!.path).readAsBytes().asStream(),
+              File(citizenship.path).lengthSync(),
+              filename: citizenship.path.split("/").last);
+          imageList.add(citizenshipMultipart);
 
-        http.MultipartFile bluebookMultipart = http.MultipartFile(
-            'documents',
-            File(bluebook!.path).readAsBytes().asStream(),
-            File(bluebook.path).lengthSync(),
-            filename: bluebook.path.split("/").last);
-        imageList.add(bluebookMultipart);
+          http.MultipartFile licenseMultipart = http.MultipartFile(
+              'documents',
+              File(license!.path).readAsBytes().asStream(),
+              File(license.path).lengthSync(),
+              filename: license.path.split("/").last);
+          imageList.add(licenseMultipart);
 
-        request.files.addAll(imageList);
-        var response = await request.send();
+          http.MultipartFile bluebookMultipart = http.MultipartFile(
+              'documents',
+              File(bluebook!.path).readAsBytes().asStream(),
+              File(bluebook.path).lengthSync(),
+              filename: bluebook.path.split("/").last);
+          imageList.add(bluebookMultipart);
 
-        showSnackBar(context, response.toString(), false);
+          request.files.addAll(imageList);
+          var response = await request.send();
+
+          if (response.statusCode == 200) {
+            // const FlutterSecureStorage().write(key: "CABAVENUE_USER_DOCUMENTS", value: jsonDecode(response.stream))
+            Navigator.of(context).pushNamed('/home');
+          }
+
+          showSnackBar(context, response.toString(), false);
+        }
         // httpErrorHandle(
         //   response: response as http.Response,
         //   context: context,
@@ -115,11 +127,18 @@ class AuthService {
         response: res,
         context: context,
         onSuccess: () {
-          Navigator.of(context).pushNamed('/');
+          const FlutterSecureStorage().write(
+              key: "CABAVENUE_USERDATA",
+              value: jsonDecode(res.body).toString());
+          Navigator.of(context).pushNamed('/home');
         },
       );
     } catch (e) {
       showSnackBar(context, e.toString(), true);
     }
+  }
+
+  void logout() async {
+    const FlutterSecureStorage().delete(key: "CABAVENUE_USERDATA");
   }
 }
