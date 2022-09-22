@@ -17,6 +17,8 @@ dependencies:
   flutter_dotenv: ^5.0.2
   image_picker: ^0.8.5+3
   flutter_secure_storage: ^5.0.2
+  custom_navigation_bar: ^0.8.2
+  iconsax: ^0.0.8
 
 dev_dependencies:
   flutter_test:
