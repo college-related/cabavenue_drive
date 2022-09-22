@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.cabavenue_drive">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="Cabavenue Drive"
         android:name="${applicationName}"
