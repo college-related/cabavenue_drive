@@ -38,7 +38,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/location-style-1-rounded.jpg
+    - assets/images/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
