@@ -17,7 +17,10 @@ class _SplashScreenState extends State<SplashScreen> {
     _readUserData().then(
       (value) => {
         if (value != null)
-          {Navigator.of(context).pushNamed('/home')}
+          {
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/home', (route) => false)
+          }
         else
           {Navigator.of(context).pushNamed('/auth')}
       },

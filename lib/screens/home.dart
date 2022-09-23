@@ -1,7 +1,10 @@
+import 'package:cabavenue_drive/screens/subscreens/dashboard.dart';
+import 'package:cabavenue_drive/screens/subscreens/map.dart';
+import 'package:cabavenue_drive/screens/subscreens/profile.dart';
+import 'package:cabavenue_drive/screens/subscreens/rides.dart';
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,10 +16,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List _pages = const [
-    Center(child: Text('Home')),
-    Center(child: Text('Rides')),
-    Center(child: Text('Map')),
-    Center(child: Text('Profile')),
+    DashboardScreen(),
+    RideScreen(),
+    MapScreen(),
+    ProfileScreen(),
   ];
   final List _pageTitle = <String>[
     'Home',
@@ -24,19 +27,6 @@ class _HomePageState extends State<HomePage> {
     'Map',
     'Profile',
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    // _readUserData();
-  }
-
-  // Future<void> _readUserData() async {
-  // var u = await const FlutterSecureStorage().read(key: "CABAVENUE_USERDATA");
-  // setState(() {
-  //   user = u;
-  // });
-  // }
 
   @override
   Widget build(BuildContext context) {
