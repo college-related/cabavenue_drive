@@ -48,18 +48,22 @@ class _HomePageState extends State<HomePage> {
         items: [
           CustomNavigationBarItem(
             icon: const Icon(Iconsax.home),
+            selectedIcon: const Icon(Iconsax.home_15),
             // title: const Text('Home'),
           ),
           CustomNavigationBarItem(
             icon: const Icon(Iconsax.smart_car),
+            selectedIcon: const Icon(Iconsax.smart_car5),
             // title: const Text('Rides'),
           ),
           CustomNavigationBarItem(
             icon: const Icon(Iconsax.map),
+            selectedIcon: const Icon(Iconsax.map_15),
             // title: const Text('Map'),
           ),
           CustomNavigationBarItem(
-            icon: const Icon(Iconsax.user_tag),
+            icon: const Icon(Iconsax.personalcard),
+            selectedIcon: const Icon(Iconsax.personalcard5),
             // title: const Text('Profile'),
           ),
         ],
