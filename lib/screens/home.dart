@@ -39,11 +39,9 @@ class _HomePageState extends State<HomePage> {
         toolbarHeight: 70.0,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _pages[_currentIndex],
-          ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          child: _pages[_currentIndex],
         ),
       ),
       bottomNavigationBar: CustomNavigationBar(
