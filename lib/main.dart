@@ -1,6 +1,7 @@
-import 'package:cabavenue_drive/pages/auth.dart';
-import 'package:cabavenue_drive/pages/home.dart';
-import 'package:cabavenue_drive/pages/splash_screen.dart';
+import 'package:cabavenue_drive/screens/auth.dart';
+import 'package:cabavenue_drive/screens/home.dart';
+import 'package:cabavenue_drive/screens/splash_screen.dart';
+import 'package:cabavenue_drive/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -16,9 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cabavenue Driver App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: AppTheme.light(),
       debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => const SplashScreen(),
