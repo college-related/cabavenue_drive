@@ -41,6 +41,10 @@ class AppTheme {
           fontSize: 18.0,
           fontWeight: FontWeight.bold,
         ),
+        subtitle2: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: Colors.blueGrey,
+        ),
       ),
     );
   }
