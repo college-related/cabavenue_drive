@@ -14,17 +14,19 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const [
-        ProfileSectionTitle(title: 'Personal Details'),
-        ProfileSectionBox(type: 'personal'),
-        ProfileSectionTitle(title: 'Vehicle Details'),
-        ProfileSectionBox(type: 'vehicle'),
-        ProfileSectionTitle(title: 'Documents'),
-        DocumentSection(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: const [
+          ProfileSectionTitle(title: 'Personal Details'),
+          ProfileSectionBox(type: 'personal'),
+          ProfileSectionTitle(title: 'Vehicle Details'),
+          ProfileSectionBox(type: 'vehicle'),
+          ProfileSectionTitle(title: 'Documents'),
+          DocumentSection(),
+        ],
+      ),
     );
   }
 }
