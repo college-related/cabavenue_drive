@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cabavenue_drive/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:iconsax/iconsax.dart';
@@ -18,13 +19,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          ProfileSectionTitle(title: 'Personal Details'),
-          ProfileSectionBox(type: 'personal'),
-          ProfileSectionTitle(title: 'Vehicle Details'),
-          ProfileSectionBox(type: 'vehicle'),
-          ProfileSectionTitle(title: 'Documents'),
-          DocumentSection(),
+        children: [
+          const SizedBox(height: 30.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Image.network(
+                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
+                height: 150.0,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  AuthService().logout(context);
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.redAccent),
+                ),
+                child: const Text('Logout'),
+              )
+            ],
+          ),
+          const ProfileSectionTitle(title: 'Personal Details'),
+          const ProfileSectionBox(type: 'personal'),
+          const ProfileSectionTitle(title: 'Vehicle Details'),
+          const ProfileSectionBox(type: 'vehicle'),
+          const ProfileSectionTitle(title: 'Documents'),
+          const DocumentSection(),
         ],
       ),
     );
