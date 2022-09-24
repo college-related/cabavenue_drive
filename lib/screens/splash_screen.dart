@@ -22,7 +22,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 .pushNamedAndRemoveUntil('/home', (route) => false)
           }
         else
-          {Navigator.of(context).pushNamed('/auth')}
+          {
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/auth', (route) => false)
+          }
       },
     );
   }

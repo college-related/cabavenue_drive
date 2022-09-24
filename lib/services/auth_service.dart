@@ -16,9 +16,11 @@ class AuthService {
     required String name,
     required String email,
     required String phone,
-    required String secondaryphone,
     required String address,
     required String password,
+    required String plateNumber,
+    required String color,
+    required String model,
     required XFile? citizenship,
     required XFile? license,
     required XFile? bluebook,
@@ -31,6 +33,11 @@ class AuthService {
         'phone': phone,
         'address': address,
         'password': password,
+        'vehicleData': {
+          'plateNumber': plateNumber,
+          'color': color,
+          'model': model,
+        },
         'role': 'driver',
       };
 
@@ -130,7 +137,8 @@ class AuthService {
           const FlutterSecureStorage().write(
               key: "CABAVENUE_USERDATA",
               value: jsonDecode(res.body).toString());
-          Navigator.of(context).pushNamed('/home');
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/home', (route) => false);
         },
       );
     } catch (e) {
@@ -138,7 +146,8 @@ class AuthService {
     }
   }
 
-  void logout() async {
+  void logout(context) async {
     const FlutterSecureStorage().delete(key: "CABAVENUE_USERDATA");
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
   }
 }
