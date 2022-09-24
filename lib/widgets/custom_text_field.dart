@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   const CustomTextField({
     Key? key,
     required this.controller,
@@ -9,7 +10,7 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.borderType = 'full',
     this.isSecureText = false,
-    this.colors = Colors.blueAccent,
+    this.colors = Colors.grey,
   }) : super(key: key);
 
   final bool isSecureText;
@@ -21,24 +22,51 @@ class CustomTextField extends StatelessWidget {
   final TextInputType keyboardType;
 
   @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  bool isHidden = true;
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
+      controller: widget.controller,
       decoration: InputDecoration(
-        icon: Icon(
-          icon,
-          color: colors,
+        filled: true,
+        fillColor: const Color.fromARGB(47, 96, 125, 139),
+        isDense: true,
+        prefixIcon: Icon(
+          widget.icon,
+          color: widget.colors,
         ),
-        border: borderType == 'full'
+        suffixIcon: widget.isSecureText
+            ? IconButton(
+                icon: Icon(isHidden ? Iconsax.eye_slash : Iconsax.eye),
+                onPressed: () {
+                  setState(() {
+                    isHidden = !isHidden;
+                  });
+                },
+              )
+            : const SizedBox(height: 0, width: 0),
+        border: widget.borderType == 'full'
             ? const OutlineInputBorder()
             : const UnderlineInputBorder(),
-        labelText: hintText,
+        labelText: widget.hintText,
+        labelStyle: const TextStyle(
+          color: Colors.grey,
+          fontSize: 14.0,
+        ),
+        floatingLabelStyle: const TextStyle(
+          color: Colors.blueAccent,
+        ),
       ),
-      obscureText: isSecureText,
-      keyboardType: keyboardType,
+      obscureText: (isHidden && widget.isSecureText),
+      keyboardType: widget.keyboardType,
       validator: (val) {
         if (val == null || val.isEmpty) {
-          return 'Enter your $hintText';
+          return 'Enter your ${widget.hintText}';
         }
         return null;
       },
