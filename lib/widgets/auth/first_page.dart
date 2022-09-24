@@ -11,6 +11,7 @@ class FirstPage extends StatefulWidget {
     required this.addressController,
     required this.passwordController,
     required this.confirmpasswordController,
+    required this.hasPassError,
   }) : super(key: key);
 
   final TextEditingController nameController;
@@ -19,74 +20,78 @@ class FirstPage extends StatefulWidget {
   final TextEditingController addressController;
   final TextEditingController passwordController;
   final TextEditingController confirmpasswordController;
+  final bool hasPassError;
 
   @override
   State<FirstPage> createState() => _FirstPageState();
 }
 
 class _FirstPageState extends State<FirstPage> {
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextField(
-            controller: widget.nameController,
-            hintText: 'Full Name',
-            icon: Iconsax.profile_circle,
-            borderType: 'full',
-          ),
+        CustomTextField(
+          controller: widget.nameController,
+          hintText: 'Full Name',
+          icon: Iconsax.profile_circle,
+          borderType: 'full',
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextField(
-            controller: widget.emailController,
-            hintText: 'Email',
-            icon: Iconsax.sms,
-            keyboardType: TextInputType.emailAddress,
-            borderType: 'full',
-          ),
+        CustomTextField(
+          controller: widget.emailController,
+          hintText: 'Email',
+          icon: Iconsax.sms,
+          keyboardType: TextInputType.emailAddress,
+          borderType: 'full',
+          validations: const ['email'],
         ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: CustomTextField(
-            controller: widget.phoneController,
-            icon: Iconsax.call,
-            hintText: 'Phone number',
-            keyboardType: TextInputType.number,
-            borderType: 'full',
-          ),
+        CustomTextField(
+          controller: widget.phoneController,
+          icon: Iconsax.call,
+          hintText: 'Phone number',
+          keyboardType: TextInputType.number,
+          borderType: 'full',
+          validations: const ['length'],
+          length: 10,
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextField(
-            controller: widget.addressController,
-            icon: Iconsax.location,
-            hintText: 'Address',
-            keyboardType: TextInputType.streetAddress,
-            borderType: 'full',
-          ),
+        CustomTextField(
+          controller: widget.addressController,
+          icon: Iconsax.location,
+          hintText: 'Address',
+          keyboardType: TextInputType.streetAddress,
+          borderType: 'full',
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextField(
-            controller: widget.passwordController,
-            icon: Iconsax.password_check,
-            hintText: 'Password',
-            isSecureText: true,
-            borderType: 'full',
-          ),
+        CustomTextField(
+          controller: widget.passwordController,
+          icon: Iconsax.password_check,
+          hintText: 'Password',
+          isSecureText: true,
+          borderType: 'full',
+          validations: const ['length', 'secure'],
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextField(
-            controller: widget.confirmpasswordController,
-            icon: Iconsax.password_check5,
-            hintText: 'Confirm password',
-            isSecureText: true,
-            borderType: 'full',
-          ),
+        CustomTextField(
+          focusNode: _focusNode,
+          controller: widget.confirmpasswordController,
+          icon: Iconsax.password_check5,
+          hintText: 'Confirm password',
+          isSecureText: true,
+          borderType: 'full',
+          validations: const ['length', 'secure'],
+          hasError: widget.hasPassError,
+          errorMessage: 'Password must be Same',
         ),
       ],
     );

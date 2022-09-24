@@ -23,33 +23,24 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextField(
-            controller: widget.modelController,
-            hintText: 'Vehicle Model: Maruti, Hudson',
-            icon: Iconsax.car,
-            borderType: 'full',
-          ),
+        CustomTextField(
+          controller: widget.modelController,
+          hintText: 'Vehicle Model: Maruti, Hudson',
+          icon: Iconsax.car,
+          borderType: 'full',
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextField(
-            controller: widget.colorContoller,
-            hintText: 'Color: red, white',
-            icon: Iconsax.color_swatch,
-            keyboardType: TextInputType.emailAddress,
-            borderType: 'full',
-          ),
+        CustomTextField(
+          controller: widget.colorContoller,
+          hintText: 'Color: red, white',
+          icon: Iconsax.color_swatch,
+          keyboardType: TextInputType.emailAddress,
+          borderType: 'full',
         ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: CustomTextField(
-            controller: widget.plateController,
-            icon: Iconsax.money,
-            hintText: 'Plate Number: Ga 10 Pa 1111',
-            borderType: 'full',
-          ),
+        CustomTextField(
+          controller: widget.plateController,
+          icon: Iconsax.money,
+          hintText: 'Plate Number: Ga 10 Pa 1111',
+          borderType: 'full',
         ),
       ],
     );

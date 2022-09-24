@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cabavenue_drive/helpers/snackbar.dart';
 import 'package:cabavenue_drive/services/auth_service.dart';
 import 'package:cabavenue_drive/widgets/auth/first_page.dart';
@@ -69,6 +67,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final ImagePicker _imagePicker = ImagePicker();
 
   int screenNumber = 1;
+  bool _hasPasswordDiffError = false;
 
   void pickCitizen() async {
     XFile? citizenImage =
@@ -125,6 +124,9 @@ class _SignupScreenState extends State<SignupScreen> {
         context: context,
       );
     } else {
+      setState(() {
+        screenNumber = 1;
+      });
       showSnackBar(context, 'Password not matched', true);
     }
   }
@@ -163,6 +165,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           phoneController: _phoneController,
                           confirmpasswordController: _confirmPasswordController,
                           addressController: _addressController,
+                          hasPassError: _hasPasswordDiffError,
                         )
                       : screenNumber == 2
                           ? SecondScreen(
@@ -201,7 +204,15 @@ class _SignupScreenState extends State<SignupScreen> {
                         onPressed: () {
                           setState(() {
                             if (screenNumber == 1) {
-                              screenNumber += 1;
+                              if (_signupFormKey.currentState!.validate()) {
+                                if (_passwordController.text ==
+                                    _confirmPasswordController.text) {
+                                  screenNumber += 1;
+                                  _hasPasswordDiffError = false;
+                                } else {
+                                  _hasPasswordDiffError = true;
+                                }
+                              }
                             } else {
                               screenNumber -= 1;
                             }
@@ -231,14 +242,14 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                               ),
                               onPressed: () {
-                                if (screenNumber == 3) {
-                                  if (_signupFormKey.currentState!.validate()) {
+                                if (_signupFormKey.currentState!.validate()) {
+                                  if (screenNumber == 3) {
                                     signup();
+                                  } else {
+                                    setState(() {
+                                      screenNumber += 1;
+                                    });
                                   }
-                                } else {
-                                  setState(() {
-                                    screenNumber += 1;
-                                  });
                                 }
                               },
                               child: Text(
@@ -302,25 +313,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const Text('Welcome back time for more rides!'),
                   const SizedBox(height: 40.0),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomTextField(
-                      controller: _phonecontroller,
-                      hintText: 'Phone number',
-                      icon: Iconsax.call,
-                      keyboardType: TextInputType.number,
-                      borderType: 'full',
-                    ),
+                  CustomTextField(
+                    controller: _phonecontroller,
+                    hintText: 'Phone number',
+                    icon: Iconsax.call,
+                    keyboardType: TextInputType.number,
+                    borderType: 'full',
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomTextField(
-                      controller: _passwordcontroller,
-                      hintText: 'Password',
-                      icon: Iconsax.password_check,
-                      isSecureText: true,
-                      borderType: 'full',
-                    ),
+                  CustomTextField(
+                    controller: _passwordcontroller,
+                    hintText: 'Password',
+                    icon: Iconsax.password_check,
+                    isSecureText: true,
+                    borderType: 'full',
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 30.0),
