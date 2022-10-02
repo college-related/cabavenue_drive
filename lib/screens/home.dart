@@ -32,11 +32,13 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_pageTitle[_currentIndex]),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        title: Text(
+          _pageTitle[_currentIndex],
+          style: Theme.of(context).textTheme.headline3,
+        ),
         automaticallyImplyLeading: false,
         toolbarHeight: 70.0,
+        elevation: 1,
       ),
       body: SafeArea(
         child: Padding(
@@ -49,29 +51,28 @@ class _HomePageState extends State<HomePage> {
           CustomNavigationBarItem(
             icon: const Icon(Iconsax.home),
             selectedIcon: const Icon(Iconsax.home_15),
-            // title: const Text('Home'),
           ),
           CustomNavigationBarItem(
             icon: const Icon(Iconsax.smart_car),
             selectedIcon: const Icon(Iconsax.smart_car5),
-            // title: const Text('Rides'),
           ),
           CustomNavigationBarItem(
             icon: const Icon(Iconsax.map),
             selectedIcon: const Icon(Iconsax.map_15),
-            // title: const Text('Map'),
           ),
           CustomNavigationBarItem(
             icon: const Icon(Iconsax.personalcard),
             selectedIcon: const Icon(Iconsax.personalcard5),
-            // title: const Text('Profile'),
           ),
         ],
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => {_currentIndex = index}),
-        elevation: 12.0,
-        selectedColor: const Color(0xff040307),
-        strokeColor: const Color(0x30040307),
+        elevation: 0.0,
+        selectedColor: const Color(0xff75A99B),
+        strokeColor: const Color(0xff75A99B),
+        unSelectedColor: Colors.black54,
+        backgroundColor: Colors.white,
+        iconSize: 28.0,
       ),
     );
   }
