@@ -1,9 +1,9 @@
-import 'dart:convert';
-
+import 'package:cabavenue_drive/models/user_model.dart';
 import 'package:cabavenue_drive/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -65,7 +65,7 @@ class DocumentSection extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: const Color.fromARGB(127, 158, 158, 158),
+            color: Colors.black12,
           ),
           borderRadius: const BorderRadius.all(
             Radius.circular(5.0),
@@ -116,7 +116,11 @@ class ProfileSectionTitle extends StatelessWidget {
       child: Row(
         children: [
           Text(title, style: Theme.of(context).textTheme.headline1),
-          IconButton(onPressed: () {}, icon: const Icon(Iconsax.edit)),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Iconsax.edit),
+            color: Colors.white,
+          ),
         ],
       ),
     );
@@ -136,50 +140,104 @@ class ProfileSectionBox extends StatefulWidget {
 }
 
 class _ProfileSectionBoxState extends State<ProfileSectionBox> {
-  var user;
+  late Future<UserModel> user;
 
   @override
   void initState() {
     super.initState();
-    _readUserData();
+    setState(() {
+      user = _readUserData();
+    });
   }
 
-  Future<void> _readUserData() async {
+  Future<UserModel> _readUserData() async {
     var u = await const FlutterSecureStorage().read(key: "CABAVENUE_USERDATA");
-    setState(() {
-      user = jsonEncode(u);
-    });
+    return UserModel.deserialize(u ?? '{}');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: const Color.fromARGB(127, 158, 158, 158),
+    return FutureBuilder<UserModel>(
+      future: user,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black12,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(5.0),
+                ),
+              ),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+              child: Column(
+                children: widget.type == 'personal'
+                    ? [
+                        ProfileDetailRow(
+                            title: 'Name', value: snapshot.data!.name),
+                        ProfileDetailRow(
+                            title: 'Phone Number',
+                            value: snapshot.data!.phone.toString()),
+                        ProfileDetailRow(
+                            title: 'Email', value: snapshot.data!.email),
+                        ProfileDetailRow(
+                            title: 'Address', value: snapshot.data!.address),
+                      ]
+                    : [
+                        ProfileDetailRow(
+                            title: 'Brand',
+                            value: snapshot.data!.vehicleData["model"]),
+                        ProfileDetailRow(
+                            title: 'Color',
+                            value: snapshot.data!.vehicleData["color"]),
+                        ProfileDetailRow(
+                            title: 'Plate Number',
+                            value: snapshot.data!.vehicleData["plateNumber"]),
+                      ],
+              ),
+            ),
+          );
+        }
+        return Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black12,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(5.0),
+            ),
           ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(5.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              shimmerEffect(context),
+              const SizedBox(height: 20.0),
+              shimmerEffect(context),
+              const SizedBox(height: 20.0),
+              shimmerEffect(context),
+            ],
           ),
-        ),
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: widget.type == 'personal'
-              ? const [
-                  ProfileDetailRow(title: 'Name', value: 'Alson Garbuja'),
-                  ProfileDetailRow(title: 'Phone Number', value: '9825140214'),
-                  ProfileDetailRow(title: 'Email', value: 'alson@gmail.com'),
-                  ProfileDetailRow(
-                      title: 'Address', value: 'Lamachour-16, pokhara'),
-                ]
-              : const [
-                  ProfileDetailRow(title: 'Brand', value: 'Maruti'),
-                  ProfileDetailRow(title: 'Color', value: 'Red'),
-                  ProfileDetailRow(
-                      title: 'Plate Number', value: 'Ga 11 Pa 1234'),
-                ],
+        );
+      },
+    );
+  }
+
+  SizedBox shimmerEffect(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.9,
+      child: Shimmer.fromColors(
+        baseColor: Colors.black12,
+        highlightColor: Colors.white,
+        child: SizedBox(
+          height: 25.0,
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: const Text('Data loading....'),
         ),
       ),
     );
@@ -199,7 +257,7 @@ class ProfileDetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: 20.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
