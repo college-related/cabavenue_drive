@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cabavenue_drive/helpers/error_handler.dart';
 import 'package:cabavenue_drive/helpers/snackbar.dart';
+import 'package:cabavenue_drive/models/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -47,21 +48,37 @@ class AuthService {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-      ).then((value) async {
+      ).then((res) async {
         httpErrorHandle(
-          response: value,
+          response: res,
           context: context,
           onSuccess: () {
+            const FlutterSecureStorage().write(
+              key: "CABAVENUE_USERDATA",
+              value: UserModel.serialize(
+                UserModel(
+                  role: jsonDecode(res.body)["user"]["role"],
+                  name: jsonDecode(res.body)["user"]["name"],
+                  isEmailVerified: jsonDecode(res.body)["user"]
+                      ["isEmailVerified"],
+                  isPhoneVerified: jsonDecode(res.body)["user"]
+                      ["isPhoneVerified"],
+                  email: jsonDecode(res.body)["user"]["email"],
+                  phone: jsonDecode(res.body)["user"]["phone"],
+                  address: jsonDecode(res.body)["user"]["address"],
+                  accessToken: jsonDecode(res.body)["tokens"]["access"]
+                      ["token"],
+                  vehicleData: jsonDecode(res.body)["user"]["vehicleData"],
+                  id: jsonDecode(res.body)["user"]["id"],
+                ),
+              ),
+            );
             showSnackBar(context, 'Registered successfully', false);
           },
         );
 
-        if (jsonDecode(value.body)['user']['id'] != null) {
-          const FlutterSecureStorage().write(
-              key: "CABAVENUE_USERDATA",
-              value: jsonDecode(value.body).toString());
-
-          var id = jsonDecode(value.body)['user']['id'];
+        if (jsonDecode(res.body)['user']['id'] != null) {
+          var id = jsonDecode(res.body)['user']['id'];
           var request = http.MultipartRequest(
               "POST", Uri.parse('http://$url/v1/documents/upload/$id'));
 
@@ -91,20 +108,15 @@ class AuthService {
           request.files.addAll(imageList);
           var response = await request.send();
 
-          if (response.statusCode == 200) {
-            // const FlutterSecureStorage().write(key: "CABAVENUE_USER_DOCUMENTS", value: jsonDecode(response.stream))
-            Navigator.of(context).pushNamed('/home');
-          }
-
-          showSnackBar(context, response.toString(), false);
+          httpErrorHandle(
+            response: response as http.Response,
+            context: context,
+            onSuccess: () {
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/home', (route) => false);
+            },
+          );
         }
-        // httpErrorHandle(
-        //   response: response as http.Response,
-        //   context: context,
-        //   onSuccess: () {
-        //     Navigator.of(context).pushNamed('/');
-        //   },
-        // );
       });
     } catch (e) {
       showSnackBar(context, e.toString(), true);
@@ -135,8 +147,24 @@ class AuthService {
         context: context,
         onSuccess: () {
           const FlutterSecureStorage().write(
-              key: "CABAVENUE_USERDATA",
-              value: jsonDecode(res.body).toString());
+            key: "CABAVENUE_USERDATA",
+            value: UserModel.serialize(
+              UserModel(
+                role: jsonDecode(res.body)["user"]["role"],
+                name: jsonDecode(res.body)["user"]["name"],
+                isEmailVerified: jsonDecode(res.body)["user"]
+                    ["isEmailVerified"],
+                isPhoneVerified: jsonDecode(res.body)["user"]
+                    ["isPhoneVerified"],
+                email: jsonDecode(res.body)["user"]["email"],
+                phone: jsonDecode(res.body)["user"]["phone"],
+                address: jsonDecode(res.body)["user"]["address"],
+                accessToken: jsonDecode(res.body)["tokens"]["access"]["token"],
+                vehicleData: jsonDecode(res.body)["user"]["vehicleData"],
+                id: jsonDecode(res.body)["user"]["id"],
+              ),
+            ),
+          );
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/home', (route) => false);
         },
