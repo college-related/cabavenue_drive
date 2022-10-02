@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -33,106 +34,115 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Text('Dashboard', style: Theme.of(context).textTheme.headline1),
           ),
           const SizedBox(height: 20.0),
-          const DashboardDataContainer1(),
+          SizedBox(
+            width: double.infinity,
+            height: 250.0,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: const [
+                DashboardDataContainer(
+                  color: Color(0xffC9B6E9),
+                  value: '34',
+                  title: 'Total Rides',
+                  icon: Iconsax.driving,
+                ),
+                SizedBox(width: 20.0),
+                DashboardDataContainer(
+                  color: Color(0xffD0EAF9),
+                  value: 'Rs. 13450',
+                  title: 'Total Earnings',
+                  icon: Iconsax.money_recive,
+                ),
+                SizedBox(width: 20.0),
+                DashboardDataContainer(
+                  color: Color(0xffB3E1D7),
+                  value: '4.3',
+                  title: 'Ratings',
+                  icon: Iconsax.star,
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 20.0),
-          const DashboardDataContainer2(),
-        ],
-      ),
-    );
-  }
-}
-
-class DashboardDataContainer1 extends StatelessWidget {
-  const DashboardDataContainer1({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(5.0),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3), // changes position of shadow
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 5.0),
+            child: Text('Today', style: Theme.of(context).textTheme.headline1),
           ),
-        ],
-      ),
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        children: const [
-          DashboardDetailRow(title: 'Total Rides', value: '34'),
-          DashboardDetailRow(title: 'Total Earnings', value: 'Rs. 13430'),
-          DashboardDetailRow(title: 'Overall Rating', value: '4.3'),
-        ],
-      ),
-    );
-  }
-}
-
-class DashboardDataContainer2 extends StatelessWidget {
-  const DashboardDataContainer2({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(5.0),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3), // changes position of shadow
+          const SizedBox(height: 20.0),
+          SizedBox(
+            width: double.infinity,
+            height: 250.0,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: const [
+                DashboardDataContainer(
+                  color: Color(0xffFDE7B2),
+                  value: '3',
+                  title: 'Total Rides',
+                  icon: Iconsax.driving,
+                ),
+                SizedBox(width: 20.0),
+                DashboardDataContainer(
+                  color: Color(0xffF8A8A9),
+                  value: 'Rs. 1340',
+                  title: 'Total Earnings',
+                  icon: Iconsax.money_recive,
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        children: const [
-          DashboardDetailRow(title: 'Rides today', value: '3'),
-          DashboardDetailRow(title: 'Earnings today', value: 'Rs. 1343'),
+          const SizedBox(height: 30.0),
         ],
       ),
     );
   }
 }
 
-class DashboardDetailRow extends StatelessWidget {
-  const DashboardDetailRow({
+class DashboardDataContainer extends StatelessWidget {
+  const DashboardDataContainer({
     Key? key,
     required this.title,
+    required this.icon,
     required this.value,
+    required this.color,
   }) : super(key: key);
 
-  final String title;
   final String value;
+  final String title;
+  final IconData icon;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 5.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Container(
+      width: 220.0,
+      height: 250.0,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      padding: const EdgeInsets.all(18.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '$title:',
-            style: Theme.of(context).textTheme.headline2,
+          Icon(
+            icon,
+            size: 50.0,
+          ),
+          const SizedBox(
+            height: 20.0,
           ),
           Text(
             value,
             style: Theme.of(context).textTheme.headline2,
+          ),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.headline3,
           ),
         ],
       ),
