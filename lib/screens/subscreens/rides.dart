@@ -38,9 +38,6 @@ class _RideScreenState extends State<RideScreen> {
                 const EdgeInsets.symmetric(vertical: 15.0, horizontal: 5.0),
             child: Text('Today', style: Theme.of(context).textTheme.headline1),
           ),
-          const Divider(
-            color: Colors.grey,
-          ),
           !_hasRideRequests
               ? Column(
                   children: [
