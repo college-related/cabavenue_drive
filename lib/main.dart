@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cabavenue Driver App',
-      theme: AppTheme.light(),
+      theme: AppTheme.main(),
       debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => const SplashScreen(),
