@@ -11,9 +11,9 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        const Text('Map'),
-        const Text('Track'),
+      children: const [
+        Text('Map'),
+        Text('Track'),
       ],
     );
   }
