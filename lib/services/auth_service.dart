@@ -74,6 +74,8 @@ class AuthService {
               ),
             );
             showSnackBar(context, 'Registered successfully', false);
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/home', (route) => false);
           },
         );
 
@@ -112,8 +114,7 @@ class AuthService {
             response: response as http.Response,
             context: context,
             onSuccess: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/home', (route) => false);
+              showSnackBar(context, 'Documents uploaded successfully', false);
             },
           );
         }
