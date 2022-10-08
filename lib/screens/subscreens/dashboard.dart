@@ -1,3 +1,5 @@
+import 'package:cabavenue_drive/models/dashboard_model.dart';
+import 'package:cabavenue_drive/services/dashboard_service.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -10,90 +12,121 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   bool _available = true;
+  late Future<DashboardModel> dashReport;
+
+  Future<DashboardModel> getDashReport() async {
+    var data = await DashboardService().getDashboardReport();
+    return DashboardModel.deserialize(data ?? '{}');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      dashReport = getDashReport();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20.0),
-          SwitchListTile(
-            title: const Text('Make yourself available'),
-            value: _available,
-            onChanged: (value) {
-              setState(() {
-                _available = value;
-              });
-            },
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 5.0),
-            child:
-                Text('Dashboard', style: Theme.of(context).textTheme.headline1),
-          ),
-          const SizedBox(height: 20.0),
-          SizedBox(
-            width: double.infinity,
-            height: 250.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: const [
-                DashboardDataContainer(
-                  color: Color(0xffC9B6E9),
-                  value: '34',
-                  title: 'Total Rides',
-                  icon: Iconsax.driving,
+      child: FutureBuilder<DashboardModel>(
+        future: dashReport,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20.0),
+                SwitchListTile(
+                  title: const Text('Make yourself available'),
+                  value: _available,
+                  onChanged: (value) {
+                    setState(() {
+                      _available = value;
+                    });
+                  },
                 ),
-                SizedBox(width: 20.0),
-                DashboardDataContainer(
-                  color: Color(0xffD0EAF9),
-                  value: 'Rs. 13450',
-                  title: 'Total Earnings',
-                  icon: Iconsax.money_recive,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 5.0),
+                  child: Text('Dashboard',
+                      style: Theme.of(context).textTheme.headline1),
                 ),
-                SizedBox(width: 20.0),
-                DashboardDataContainer(
-                  color: Color(0xffB3E1D7),
-                  value: '4.3',
-                  title: 'Ratings',
-                  icon: Iconsax.star,
+                const SizedBox(height: 20.0),
+                SizedBox(
+                  width: double.infinity,
+                  height: 250.0,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      DashboardDataContainer(
+                        color: const Color(0xffC9B6E9),
+                        value: snapshot.data!.totalRides.toString(),
+                        title: 'Total Rides',
+                        icon: Iconsax.driving,
+                      ),
+                      const SizedBox(width: 20.0),
+                      DashboardDataContainer(
+                        color: const Color(0xffD0EAF9),
+                        value: 'Rs. ${snapshot.data!.totalEarnings.toString()}',
+                        title: 'Total Earnings',
+                        icon: Iconsax.money_recive,
+                      ),
+                      const SizedBox(width: 20.0),
+                      DashboardDataContainer(
+                        color: const Color(0xffB3E1D7),
+                        value: snapshot.data!.totalRating.toString(),
+                        title: 'Ratings',
+                        icon: Iconsax.star,
+                      ),
+                    ],
+                  ),
                 ),
+                const SizedBox(height: 20.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 5.0),
+                  child: Text('Today',
+                      style: Theme.of(context).textTheme.headline1),
+                ),
+                const SizedBox(height: 20.0),
+                SizedBox(
+                  width: double.infinity,
+                  height: 250.0,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      DashboardDataContainer(
+                        color: const Color(0xffFDE7B2),
+                        value:
+                            snapshot.data!.totalsToday['totalRides'].toString(),
+                        title: 'Total Rides',
+                        icon: Iconsax.driving,
+                      ),
+                      const SizedBox(width: 20.0),
+                      DashboardDataContainer(
+                        color: const Color(0xffF8A8A9),
+                        value:
+                            'Rs. ${snapshot.data!.totalsToday["totalEarnings"].toString()}',
+                        title: 'Total Earnings',
+                        icon: Iconsax.money_recive,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30.0),
               ],
+            );
+          }
+          return SizedBox(
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: const Center(
+              child: CircularProgressIndicator.adaptive(),
             ),
-          ),
-          const SizedBox(height: 20.0),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 5.0),
-            child: Text('Today', style: Theme.of(context).textTheme.headline1),
-          ),
-          const SizedBox(height: 20.0),
-          SizedBox(
-            width: double.infinity,
-            height: 250.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: const [
-                DashboardDataContainer(
-                  color: Color(0xffFDE7B2),
-                  value: '3',
-                  title: 'Total Rides',
-                  icon: Iconsax.driving,
-                ),
-                SizedBox(width: 20.0),
-                DashboardDataContainer(
-                  color: Color(0xffF8A8A9),
-                  value: 'Rs. 1340',
-                  title: 'Total Earnings',
-                  icon: Iconsax.money_recive,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 30.0),
-        ],
+          );
+        },
       ),
     );
   }
