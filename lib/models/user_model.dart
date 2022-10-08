@@ -58,4 +58,7 @@ class UserModel {
 
   static Future<UserModel> deserialize(String json) => Future.delayed(
       const Duration(seconds: 1), () => UserModel.fromJson(jsonDecode(json)));
+
+  static UserModel deserializeFast(String json) =>
+      UserModel.fromJson(jsonDecode(json));
 }
