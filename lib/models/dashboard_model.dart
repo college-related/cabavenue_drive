@@ -3,7 +3,7 @@ import 'dart:convert';
 class DashboardModel {
   int totalRides;
   int totalEarnings;
-  double totalRating;
+  int totalRating;
   dynamic totalsToday;
 
   DashboardModel({
