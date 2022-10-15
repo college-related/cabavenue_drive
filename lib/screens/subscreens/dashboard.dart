@@ -14,8 +14,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool _available = true;
   late Future<DashboardModel> dashReport;
 
-  Future<DashboardModel> getDashReport() async {
-    var data = await DashboardService().getDashboardReport();
+  Future<DashboardModel> getDashReport(BuildContext context) async {
+    var data = await DashboardService().getDashboardReport(context);
+    // print(data);
     return DashboardModel.deserialize(data ?? '{}');
   }
 
@@ -23,7 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     setState(() {
-      dashReport = getDashReport();
+      dashReport = getDashReport(context);
     });
   }
 
