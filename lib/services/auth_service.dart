@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cabavenue_drive/helpers/error_handler.dart';
 import 'package:cabavenue_drive/helpers/snackbar.dart';
 import 'package:cabavenue_drive/models/user_model.dart';
+import 'package:cabavenue_drive/providers/profile_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -53,26 +54,23 @@ class AuthService {
           response: res,
           context: context,
           onSuccess: () {
+            UserModel user = UserModel(
+              role: jsonDecode(res.body)["user"]["role"],
+              name: jsonDecode(res.body)["user"]["name"],
+              isEmailVerified: jsonDecode(res.body)["user"]["isEmailVerified"],
+              isPhoneVerified: jsonDecode(res.body)["user"]["isPhoneVerified"],
+              email: jsonDecode(res.body)["user"]["email"],
+              phone: jsonDecode(res.body)["user"]["phone"],
+              address: jsonDecode(res.body)["user"]["address"],
+              accessToken: jsonDecode(res.body)["tokens"]["access"]["token"],
+              vehicleData: jsonDecode(res.body)["user"]["vehicleData"],
+              id: jsonDecode(res.body)["user"]["id"],
+            );
             const FlutterSecureStorage().write(
               key: "CABAVENUE_USERDATA",
-              value: UserModel.serialize(
-                UserModel(
-                  role: jsonDecode(res.body)["user"]["role"],
-                  name: jsonDecode(res.body)["user"]["name"],
-                  isEmailVerified: jsonDecode(res.body)["user"]
-                      ["isEmailVerified"],
-                  isPhoneVerified: jsonDecode(res.body)["user"]
-                      ["isPhoneVerified"],
-                  email: jsonDecode(res.body)["user"]["email"],
-                  phone: jsonDecode(res.body)["user"]["phone"],
-                  address: jsonDecode(res.body)["user"]["address"],
-                  accessToken: jsonDecode(res.body)["tokens"]["access"]
-                      ["token"],
-                  vehicleData: jsonDecode(res.body)["user"]["vehicleData"],
-                  id: jsonDecode(res.body)["user"]["id"],
-                ),
-              ),
+              value: UserModel.serialize(user),
             );
+            ProfileProvider(user: user);
             showSnackBar(context, 'Registered successfully', false);
             Navigator.of(context)
                 .pushNamedAndRemoveUntil('/home', (route) => false);
