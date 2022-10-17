@@ -11,12 +11,10 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  bool _available = true;
   late Future<DashboardModel> dashReport;
 
   Future<DashboardModel> getDashReport(BuildContext context) async {
     var data = await DashboardService().getDashboardReport(context);
-    // print(data);
     return DashboardModel.deserialize(data ?? '{}');
   }
 
@@ -39,15 +37,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20.0),
-                SwitchListTile(
-                  title: const Text('Make yourself available'),
-                  value: _available,
-                  onChanged: (value) {
-                    setState(() {
-                      _available = value;
-                    });
-                  },
-                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 15.0, horizontal: 5.0),

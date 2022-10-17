@@ -37,7 +37,7 @@ class DashboardService {
 
       return dashboard;
     } catch (e) {
-      print(e.toString());
+      showSnackBar(context, e.toString(), true);
     }
   }
 }
