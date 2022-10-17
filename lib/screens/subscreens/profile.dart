@@ -2,7 +2,7 @@ import 'package:cabavenue_drive/models/user_model.dart';
 import 'package:cabavenue_drive/providers/profile_provider.dart';
 import 'package:cabavenue_drive/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -14,6 +14,32 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  void getProfileData() async {
+    /**
+     * Add user data from localstorage to provider
+     */
+    UserModel oldUser = ProfileProvider().getUserData;
+
+    if (oldUser.accessToken == '') {
+      var u =
+          await const FlutterSecureStorage().read(key: "CABAVENUE_USERDATA");
+      if (u != null) {
+        UserModel user = await UserModel.deserialize(u);
+
+        // ignore: use_build_context_synchronously
+        Provider.of<ProfileProvider>(context, listen: false).setUserData(user);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      getProfileData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ProfileProvider>(
@@ -32,16 +58,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
                     height: 150.0,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      AuthService().logout(context);
-                    },
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.redAccent),
-                    ),
-                    child: const Text('Logout'),
-                  )
+                  Column(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/profile-edit');
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.blueAccent),
+                        ),
+                        child: const Text('Edit Profile'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.blueAccent),
+                        ),
+                        child: const Text('Edit document'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          AuthService().logout(context);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.redAccent),
+                        ),
+                        child: const Text('Logout'),
+                      ),
+                    ],
+                  ),
                 ],
               ),
               const ProfileSectionTitle(title: 'Personal Details'),
@@ -118,16 +166,7 @@ class ProfileSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 5.0),
-      child: Row(
-        children: [
-          Text(title, style: Theme.of(context).textTheme.headline1),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Iconsax.edit),
-            color: Colors.white,
-          ),
-        ],
-      ),
+      child: Text(title, style: Theme.of(context).textTheme.headline1),
     );
   }
 }

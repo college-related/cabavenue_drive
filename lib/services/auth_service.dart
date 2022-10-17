@@ -8,8 +8,10 @@ import 'package:cabavenue_drive/providers/profile_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AuthService {
   String? url = dotenv.env['BACKEND_URL_WITH_PORT'];
@@ -26,6 +28,8 @@ class AuthService {
     required XFile? citizenship,
     required XFile? license,
     required XFile? bluebook,
+    required String areaId,
+    required String areaName,
     required BuildContext context,
   }) async {
     try {
@@ -41,6 +45,10 @@ class AuthService {
           'model': model,
         },
         'role': 'driver',
+        'area': {
+          'id': areaId,
+          'name': areaName,
+        },
       };
 
       await http.post(
@@ -65,12 +73,14 @@ class AuthService {
               accessToken: jsonDecode(res.body)["tokens"]["access"]["token"],
               vehicleData: jsonDecode(res.body)["user"]["vehicleData"],
               id: jsonDecode(res.body)["user"]["id"],
+              area: jsonDecode(res.body)["user"]["area"],
             );
             const FlutterSecureStorage().write(
               key: "CABAVENUE_USERDATA",
               value: UserModel.serialize(user),
             );
-            ProfileProvider(user: user);
+            Provider.of<ProfileProvider>(context, listen: false)
+                .setUserData(user);
             showSnackBar(context, 'Registered successfully', false);
             Navigator.of(context)
                 .pushNamedAndRemoveUntil('/home', (route) => false);
@@ -145,25 +155,26 @@ class AuthService {
         response: res,
         context: context,
         onSuccess: () {
+          UserModel user = UserModel(
+            role: jsonDecode(res.body)["user"]["role"],
+            name: jsonDecode(res.body)["user"]["name"],
+            isEmailVerified: jsonDecode(res.body)["user"]["isEmailVerified"],
+            isPhoneVerified: jsonDecode(res.body)["user"]["isPhoneVerified"],
+            email: jsonDecode(res.body)["user"]["email"],
+            phone: jsonDecode(res.body)["user"]["phone"],
+            address: jsonDecode(res.body)["user"]["address"],
+            accessToken: jsonDecode(res.body)["tokens"]["access"]["token"],
+            vehicleData: jsonDecode(res.body)["user"]["vehicleData"],
+            id: jsonDecode(res.body)["user"]["id"],
+            area: jsonDecode(res.body)["user"]["area"],
+          );
           const FlutterSecureStorage().write(
             key: "CABAVENUE_USERDATA",
-            value: UserModel.serialize(
-              UserModel(
-                role: jsonDecode(res.body)["user"]["role"],
-                name: jsonDecode(res.body)["user"]["name"],
-                isEmailVerified: jsonDecode(res.body)["user"]
-                    ["isEmailVerified"],
-                isPhoneVerified: jsonDecode(res.body)["user"]
-                    ["isPhoneVerified"],
-                email: jsonDecode(res.body)["user"]["email"],
-                phone: jsonDecode(res.body)["user"]["phone"],
-                address: jsonDecode(res.body)["user"]["address"],
-                accessToken: jsonDecode(res.body)["tokens"]["access"]["token"],
-                vehicleData: jsonDecode(res.body)["user"]["vehicleData"],
-                id: jsonDecode(res.body)["user"]["id"],
-              ),
-            ),
+            value: UserModel.serialize(user),
           );
+          Provider.of<ProfileProvider>(context, listen: false)
+              .setUserData(user);
+          Fluttertoast.showToast(msg: 'Logged in successfully');
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/home', (route) => false);
         },
