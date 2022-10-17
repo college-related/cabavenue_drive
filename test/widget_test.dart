@@ -5,7 +5,6 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:cabavenue_drive/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -14,23 +13,7 @@ import 'package:cabavenue_drive/main.dart';
 void main() {
   testWidgets('Cabavenue drive app test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(
-        user: UserModel(
-      name: '',
-      role: 'Driver',
-      isEmailVerified: false,
-      isPhoneVerified: false,
-      email: '',
-      phone: 0,
-      address: '',
-      accessToken: '',
-      vehicleData: {
-        'model': '',
-        'color': '',
-        'plateNumber': '',
-      },
-      id: '',
-    )));
+    await tester.pumpWidget(const MyApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
