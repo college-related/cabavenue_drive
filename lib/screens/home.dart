@@ -1,5 +1,4 @@
 import 'package:cabavenue_drive/screens/subscreens/dashboard.dart';
-import 'package:cabavenue_drive/screens/subscreens/map.dart';
 import 'package:cabavenue_drive/screens/subscreens/profile.dart';
 import 'package:cabavenue_drive/screens/subscreens/rides.dart';
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
@@ -19,13 +18,11 @@ class _HomePageState extends State<HomePage> {
   final List _pages = const [
     DashboardScreen(),
     RideScreen(),
-    MapScreen(),
     ProfileScreen(),
   ];
   final List _pageTitle = <String>[
     'Home',
     'Rides',
-    'Map',
     'Profile',
   ];
 
@@ -61,10 +58,6 @@ class _HomePageState extends State<HomePage> {
             CustomNavigationBarItem(
               icon: const Icon(Iconsax.smart_car),
               selectedIcon: const Icon(Iconsax.smart_car5),
-            ),
-            CustomNavigationBarItem(
-              icon: const Icon(Iconsax.map),
-              selectedIcon: const Icon(Iconsax.map_15),
             ),
             CustomNavigationBarItem(
               icon: const Icon(Iconsax.personalcard),
