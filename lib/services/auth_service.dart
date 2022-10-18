@@ -5,7 +5,7 @@ import 'package:cabavenue_drive/helpers/error_handler.dart';
 import 'package:cabavenue_drive/helpers/snackbar.dart';
 import 'package:cabavenue_drive/models/user_model.dart';
 import 'package:cabavenue_drive/providers/profile_provider.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -81,9 +81,10 @@ class AuthService {
             );
             Provider.of<ProfileProvider>(context, listen: false)
                 .setUserData(user);
-            showSnackBar(context, 'Registered successfully', false);
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/home', (route) => false);
+            Fluttertoast.showToast(
+              msg: 'Registered successfully',
+              backgroundColor: Colors.green,
+            );
           },
         );
 
@@ -122,7 +123,8 @@ class AuthService {
             response: response as http.Response,
             context: context,
             onSuccess: () {
-              showSnackBar(context, 'Documents uploaded successfully', false);
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/home', (route) => false);
             },
           );
         }

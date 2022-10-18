@@ -56,6 +56,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _modelController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final TextEditingController _plateController = TextEditingController();
+  final TextEditingController _areaIDController = TextEditingController();
+  final TextEditingController _areaNameController = TextEditingController();
 
   final AuthService _authService = AuthService();
 
@@ -105,6 +107,8 @@ class _SignupScreenState extends State<SignupScreen> {
     _colorController.dispose();
     _modelController.dispose();
     _plateController.dispose();
+    _areaIDController.dispose();
+    _areaNameController.dispose();
   }
 
   void signup() {
@@ -122,6 +126,8 @@ class _SignupScreenState extends State<SignupScreen> {
         license: license,
         bluebook: bluebook,
         context: context,
+        areaId: _areaIDController.text,
+        areaName: _areaNameController.text,
       );
     } else {
       setState(() {
@@ -149,11 +155,25 @@ class _SignupScreenState extends State<SignupScreen> {
                   style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),
                 ),
                 const Text('Start of a new journey'),
-                GestureDetector(
-                  onTap: () {
-                    widget.callback();
-                  },
-                  child: const Text('Already have an account? Log in'),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: 'Already have an account?  ',
+                        style: TextStyle(color: Colors.black54, fontSize: 16),
+                      ),
+                      TextSpan(
+                          text: 'Login',
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.blue),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              widget.callback();
+                            }),
+                    ],
+                  ),
                 ),
                 Form(
                   key: _signupFormKey,
@@ -172,6 +192,8 @@ class _SignupScreenState extends State<SignupScreen> {
                               colorContoller: _colorController,
                               modelController: _modelController,
                               plateController: _plateController,
+                              areaIDController: _areaIDController,
+                              areaNameController: _areaNameController,
                             )
                           : ThirdScreen(
                               pickCitizen: pickCitizen,

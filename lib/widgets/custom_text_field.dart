@@ -17,6 +17,7 @@ class CustomTextField extends StatefulWidget {
     this.hasError = false,
     this.errorMessage = '',
     this.focusNode,
+    this.onTap,
   }) : super(key: key);
 
   final bool isSecureText;
@@ -31,6 +32,7 @@ class CustomTextField extends StatefulWidget {
   final bool hasError;
   final String errorMessage;
   final FocusNode? focusNode;
+  final Function? onTap;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -44,6 +46,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
+        onTap: widget.onTap != null
+            ? () {
+                widget.onTap!();
+              }
+            : null,
         focusNode: widget.focusNode,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: widget.controller,
