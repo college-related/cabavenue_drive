@@ -86,6 +86,8 @@ class AuthService {
               msg: 'Registered successfully',
               backgroundColor: Colors.green,
             );
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/home', (route) => false);
           },
         );
       });
