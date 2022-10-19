@@ -68,10 +68,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
               child: Column(
                 children: [
-                  const Image(
-                      image: AssetImage(
-                          'assets/images/location-style-1-rounded.jpg')),
-                  const SizedBox(height: 40.0),
                   CustomTextField(
                     controller: _namecontroller,
                     hintText: 'Name',

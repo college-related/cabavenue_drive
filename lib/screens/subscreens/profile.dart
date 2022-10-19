@@ -3,6 +3,7 @@ import 'package:cabavenue_drive/providers/profile_provider.dart';
 import 'package:cabavenue_drive/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -52,31 +53,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 30.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.network(
-                    profile.getUserData.profileUrl,
-                    height: 150.0,
-                  ),
+                  ProfileImage(url: profile.getUserData.profileUrl),
                   Column(
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('/profile-edit');
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.blueAccent),
-                        ),
-                        child: const Text('Edit Profile'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.blueAccent),
-                        ),
-                        child: const Text('Edit document'),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('/profile-edit');
+                            },
+                            icon: const Icon(Iconsax.edit),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Iconsax.document_1),
+                          ),
+                        ],
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -107,13 +101,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 // ignore: must_be_immutable
+class ProfileImage extends StatelessWidget {
+  ProfileImage({
+    Key? key,
+    required this.url,
+  }) : super(key: key);
+
+  String url = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      url,
+      height: 100.0,
+      width: 100.0,
+      fit: BoxFit.cover,
+    );
+  }
+}
+
+// ignore: must_be_immutable
 class DocumentSection extends StatelessWidget {
   DocumentSection({
     Key? key,
     required this.documents,
   }) : super(key: key);
 
-  List documents = [];
+  List documents = [
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -134,24 +152,21 @@ class DocumentSection extends StatelessWidget {
             const Text('License'),
             const SizedBox(height: 20.0),
             Image.network(
-              documents[0] ??
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
+              documents[0],
               height: 200.0,
             ),
             const SizedBox(height: 20.0),
             const Text('Citizenship'),
             const SizedBox(height: 20.0),
             Image.network(
-              documents[1] ??
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
+              documents[1],
               height: 200.0,
             ),
             const SizedBox(height: 20.0),
             const Text('BlueBook'),
             const SizedBox(height: 20.0),
             Image.network(
-              documents[2] ??
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
+              documents[2],
               height: 200.0,
             ),
           ],
