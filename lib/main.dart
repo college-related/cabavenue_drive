@@ -3,6 +3,7 @@ import 'package:cabavenue_drive/screens/auth.dart';
 import 'package:cabavenue_drive/screens/editscreens/document_edit.dart';
 import 'package:cabavenue_drive/screens/editscreens/profile_edit.dart';
 import 'package:cabavenue_drive/screens/home.dart';
+import 'package:cabavenue_drive/screens/ride_history.dart';
 import 'package:cabavenue_drive/screens/splash_screen.dart';
 import 'package:cabavenue_drive/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
           '/auth': (context) => const AuthPage(),
           '/profile-edit': (context) => const ProfileEditPage(),
           '/document-edit': (context) => const DocumentEdit(),
+          '/history': (context) => const RideHistory(),
         },
       ),
     );

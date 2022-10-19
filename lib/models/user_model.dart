@@ -14,6 +14,7 @@ class UserModel {
   dynamic area;
   List documents;
   String profileUrl;
+  List? rideHistory = [];
 
   UserModel({
     required this.name,
@@ -29,6 +30,7 @@ class UserModel {
     required this.area,
     required this.documents,
     required this.profileUrl,
+    this.rideHistory,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> jsonData) {
@@ -46,6 +48,7 @@ class UserModel {
       area: jsonData['area'],
       documents: jsonData['documents'],
       profileUrl: jsonData['profileUrl'],
+      rideHistory: jsonData['rideHistory'],
     );
   }
 
@@ -63,6 +66,7 @@ class UserModel {
         'area': model.area,
         'documents': model.documents,
         'profileUrl': model.profileUrl,
+        'rideHistory': model.rideHistory,
       };
 
   static String serialize(UserModel model) =>

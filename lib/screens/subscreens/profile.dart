@@ -72,6 +72,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             icon: const Icon(Iconsax.document_1),
                           ),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('/history');
+                            },
+                            icon: const Icon(Iconsax.archive),
+                          ),
                         ],
                       ),
                       ElevatedButton(
