@@ -5,6 +5,7 @@ import 'package:cabavenue_drive/helpers/snackbar.dart';
 import 'package:cabavenue_drive/services/token_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class DashboardService {
@@ -29,7 +30,10 @@ class DashboardService {
             jsonDecode(value.body)['message'] == 'Please authenticate') {
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/auth', (route) => false);
-          showSnackBar(context, 'Session finished, please login again', true);
+          Fluttertoast.showToast(
+            msg: 'Session finished, Please login',
+            backgroundColor: Colors.red[600],
+          );
         } else {
           httpErrorHandle(response: value, context: context, onSuccess: () {});
         }

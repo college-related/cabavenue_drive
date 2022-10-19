@@ -136,6 +136,12 @@ class _DocumentEditState extends State<DocumentEdit> {
                     const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                 child: Column(
                   children: [
+                    Center(
+                      child: Text(
+                        'Citizenship',
+                        style: Theme.of(context).textTheme.headline3,
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () {
                         updateImage(
@@ -146,6 +152,12 @@ class _DocumentEditState extends State<DocumentEdit> {
                       },
                       child: _handlePreview(
                           profile.getUserData.documents[0], "Citizenship"),
+                    ),
+                    Center(
+                      child: Text(
+                        'License',
+                        style: Theme.of(context).textTheme.headline3,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -158,6 +170,12 @@ class _DocumentEditState extends State<DocumentEdit> {
                       child: _handlePreview(
                           profile.getUserData.documents[1], "License"),
                     ),
+                    Center(
+                      child: Text(
+                        'Bluebook',
+                        style: Theme.of(context).textTheme.headline3,
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () {
                         updateImage(
@@ -168,6 +186,12 @@ class _DocumentEditState extends State<DocumentEdit> {
                       },
                       child: _handlePreview(
                           profile.getUserData.documents[2], "Bluebook"),
+                    ),
+                    Center(
+                      child: Text(
+                        'Profile',
+                        style: Theme.of(context).textTheme.headline3,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {

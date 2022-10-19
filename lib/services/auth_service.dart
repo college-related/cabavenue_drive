@@ -155,5 +155,9 @@ class AuthService {
   void logout(context) async {
     const FlutterSecureStorage().delete(key: "CABAVENUE_USERDATA");
     Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    Fluttertoast.showToast(
+      msg: 'Logged out',
+      backgroundColor: Colors.green[600],
+    );
   }
 }
