@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cabavenue_drive/helpers/error_handler.dart';
 import 'package:cabavenue_drive/helpers/snackbar.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AuthService {
@@ -25,11 +23,10 @@ class AuthService {
     required String plateNumber,
     required String color,
     required String model,
-    required XFile? citizenship,
-    required XFile? license,
-    required XFile? bluebook,
     required String areaId,
     required String areaName,
+    required List<String> documents,
+    required String profileUrl,
     required BuildContext context,
   }) async {
     try {
@@ -49,6 +46,8 @@ class AuthService {
           'id': areaId,
           'name': areaName,
         },
+        'documents': documents,
+        'profileUrl': profileUrl,
       };
 
       await http.post(
@@ -74,6 +73,8 @@ class AuthService {
               vehicleData: jsonDecode(res.body)["user"]["vehicleData"],
               id: jsonDecode(res.body)["user"]["id"],
               area: jsonDecode(res.body)["user"]["area"],
+              documents: jsonDecode(res.body)["user"]["documents"],
+              profileUrl: jsonDecode(res.body)["user"]["profileUrl"],
             );
             const FlutterSecureStorage().write(
               key: "CABAVENUE_USERDATA",
@@ -87,47 +88,6 @@ class AuthService {
             );
           },
         );
-
-        if (jsonDecode(res.body)['user']['id'] != null) {
-          var id = jsonDecode(res.body)['user']['id'];
-          var request = http.MultipartRequest(
-              "POST", Uri.parse('http://$url/v1/documents/upload/$id'));
-
-          List<http.MultipartFile> imageList = [];
-
-          http.MultipartFile citizenshipMultipart = http.MultipartFile(
-              'documents',
-              File(citizenship!.path).readAsBytes().asStream(),
-              File(citizenship.path).lengthSync(),
-              filename: citizenship.path.split("/").last);
-          imageList.add(citizenshipMultipart);
-
-          http.MultipartFile licenseMultipart = http.MultipartFile(
-              'documents',
-              File(license!.path).readAsBytes().asStream(),
-              File(license.path).lengthSync(),
-              filename: license.path.split("/").last);
-          imageList.add(licenseMultipart);
-
-          http.MultipartFile bluebookMultipart = http.MultipartFile(
-              'documents',
-              File(bluebook!.path).readAsBytes().asStream(),
-              File(bluebook.path).lengthSync(),
-              filename: bluebook.path.split("/").last);
-          imageList.add(bluebookMultipart);
-
-          request.files.addAll(imageList);
-          var response = await request.send();
-
-          httpErrorHandle(
-            response: response as http.Response,
-            context: context,
-            onSuccess: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/home', (route) => false);
-            },
-          );
-        }
       });
     } catch (e) {
       showSnackBar(context, e.toString(), true);
@@ -169,6 +129,8 @@ class AuthService {
             vehicleData: jsonDecode(res.body)["user"]["vehicleData"],
             id: jsonDecode(res.body)["user"]["id"],
             area: jsonDecode(res.body)["user"]["area"],
+            documents: jsonDecode(res.body)["user"]["documents"],
+            profileUrl: jsonDecode(res.body)["user"]["profileUrl"],
           );
           const FlutterSecureStorage().write(
             key: "CABAVENUE_USERDATA",

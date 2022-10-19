@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Image.network(
-                    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
+                    profile.getUserData.profileUrl,
                     height: 150.0,
                   ),
                   Column(
@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const ProfileSectionTitle(title: 'Vehicle Details'),
               ProfileSectionBox(type: 'vehicle', user: profile.getUserData),
               const ProfileSectionTitle(title: 'Documents'),
-              const DocumentSection(),
+              DocumentSection(documents: profile.getUserData.documents),
             ],
           ),
         );
@@ -106,10 +106,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+// ignore: must_be_immutable
 class DocumentSection extends StatelessWidget {
-  const DocumentSection({
+  DocumentSection({
     Key? key,
+    required this.documents,
   }) : super(key: key);
+
+  List documents = [];
 
   @override
   Widget build(BuildContext context) {
@@ -130,21 +134,24 @@ class DocumentSection extends StatelessWidget {
             const Text('License'),
             const SizedBox(height: 20.0),
             Image.network(
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
+              documents[0] ??
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
               height: 200.0,
             ),
             const SizedBox(height: 20.0),
             const Text('Citizenship'),
             const SizedBox(height: 20.0),
             Image.network(
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
+              documents[1] ??
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
               height: 200.0,
             ),
             const SizedBox(height: 20.0),
             const Text('BlueBook'),
             const SizedBox(height: 20.0),
             Image.network(
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
+              documents[2] ??
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
               height: 200.0,
             ),
           ],

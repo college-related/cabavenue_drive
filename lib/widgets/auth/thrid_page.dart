@@ -9,17 +9,21 @@ class ThirdScreen extends StatefulWidget {
     required this.pickCitizen,
     required this.pickLicense,
     required this.pickBluebook,
+    required this.pickProfile,
     required this.citizenship,
     required this.bluebook,
     required this.license,
+    required this.profile,
   }) : super(key: key);
 
   final VoidCallback pickCitizen;
   final VoidCallback pickLicense;
   final VoidCallback pickBluebook;
+  final VoidCallback pickProfile;
   final XFile? citizenship;
   final XFile? license;
   final XFile? bluebook;
+  final XFile? profile;
 
   @override
   State<ThirdScreen> createState() => _ThirdScreenState();
@@ -64,6 +68,12 @@ class _ThirdScreenState extends State<ThirdScreen> {
           },
           child: _handlePreview(widget.bluebook, "Bluebook"),
         ),
+        GestureDetector(
+          onTap: () {
+            widget.pickProfile();
+          },
+          child: _handlePreview(widget.profile, "Profile Image"),
+        )
       ],
     );
   }

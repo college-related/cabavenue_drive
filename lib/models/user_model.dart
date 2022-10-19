@@ -12,6 +12,8 @@ class UserModel {
   String accessToken;
   dynamic vehicleData;
   dynamic area;
+  List documents;
+  String profileUrl;
 
   UserModel({
     required this.name,
@@ -25,6 +27,8 @@ class UserModel {
     required this.vehicleData,
     required this.id,
     required this.area,
+    required this.documents,
+    required this.profileUrl,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> jsonData) {
@@ -40,6 +44,8 @@ class UserModel {
       vehicleData: jsonData['vehicleData'],
       id: jsonData['id'],
       area: jsonData['area'],
+      documents: jsonData['documents'],
+      profileUrl: jsonData['profileUrl'],
     );
   }
 
@@ -55,6 +61,8 @@ class UserModel {
         'id': model.id,
         'name': model.name,
         'area': model.area,
+        'documents': model.documents,
+        'profileUrl': model.profileUrl,
       };
 
   static String serialize(UserModel model) =>

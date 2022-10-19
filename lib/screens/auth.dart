@@ -4,8 +4,11 @@ import 'package:cabavenue_drive/widgets/auth/first_page.dart';
 import 'package:cabavenue_drive/widgets/auth/second_page.dart';
 import 'package:cabavenue_drive/widgets/auth/thrid_page.dart';
 import 'package:cabavenue_drive/widgets/custom_text_field.dart';
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -61,19 +64,63 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final AuthService _authService = AuthService();
 
+  final cloudinary = Cloudinary.full(
+    apiKey: dotenv.env['IMAGE_API_KEY'] ?? '',
+    apiSecret: dotenv.env['IMAGE_API_SECRET'] ?? '',
+    cloudName: dotenv.env['IMAGE_CLOUD_NAME'] ?? '',
+  );
+
   XFile? citizenship;
   XFile? license;
   XFile? bluebook;
+  XFile? profile;
   List<XFile?> images = [];
+  List<String> imageUrls = [];
+  String profileUrl = '';
 
   final ImagePicker _imagePicker = ImagePicker();
 
   int screenNumber = 1;
   bool _hasPasswordDiffError = false;
 
+  void upload({XFile? image, bool isProfile = false}) async {
+    try {
+      Fluttertoast.showToast(
+        msg: 'Uploading....',
+        backgroundColor: Colors.orange[700],
+      );
+
+      final cloudinaryResource = CloudinaryUploadResource(
+        filePath: image?.path,
+        uploadPreset: '',
+      );
+      CloudinaryResponse response =
+          await cloudinary.uploadResource(cloudinaryResource);
+
+      if (response.isSuccessful && response.secureUrl!.isNotEmpty) {
+        if (!isProfile) {
+          imageUrls.add(response.secureUrl!);
+        } else {
+          profileUrl = response.secureUrl!;
+        }
+        Fluttertoast.showToast(
+          msg: 'Upload complete',
+          backgroundColor: Colors.green[700],
+        );
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Error uploading', backgroundColor: Colors.red[600]);
+      }
+    } catch (e) {
+      Fluttertoast.showToast(
+          msg: e.toString(), backgroundColor: Colors.red[600]);
+    }
+  }
+
   void pickCitizen() async {
     XFile? citizenImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
+    upload(image: citizenImage);
     setState(() {
       citizenship = citizenImage;
     });
@@ -82,6 +129,7 @@ class _SignupScreenState extends State<SignupScreen> {
   void pickLicense() async {
     XFile? licenseImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
+    upload(image: licenseImage);
     setState(() {
       license = licenseImage;
     });
@@ -90,8 +138,18 @@ class _SignupScreenState extends State<SignupScreen> {
   void pickBluebook() async {
     XFile? bluebookImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
+    upload(image: bluebookImage);
     setState(() {
       bluebook = bluebookImage;
+    });
+  }
+
+  void pickProfile() async {
+    XFile? profileImage =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+    upload(image: profileImage, isProfile: true);
+    setState(() {
+      profile = profileImage;
     });
   }
 
@@ -122,12 +180,11 @@ class _SignupScreenState extends State<SignupScreen> {
         color: _colorController.text,
         model: _modelController.text,
         plateNumber: _plateController.text,
-        citizenship: citizenship,
-        license: license,
-        bluebook: bluebook,
         context: context,
         areaId: _areaIDController.text,
         areaName: _areaNameController.text,
+        documents: imageUrls,
+        profileUrl: profileUrl,
       );
     } else {
       setState(() {
@@ -199,9 +256,11 @@ class _SignupScreenState extends State<SignupScreen> {
                               pickCitizen: pickCitizen,
                               pickLicense: pickLicense,
                               pickBluebook: pickBluebook,
+                              pickProfile: pickProfile,
                               citizenship: citizenship,
                               bluebook: bluebook,
                               license: license,
+                              profile: profile,
                             ),
                 ),
                 Container(
@@ -266,7 +325,16 @@ class _SignupScreenState extends State<SignupScreen> {
                               onPressed: () {
                                 if (_signupFormKey.currentState!.validate()) {
                                   if (screenNumber == 3) {
-                                    signup();
+                                    if (bluebook?.path != null &&
+                                        license?.path != null &&
+                                        citizenship?.path != null) {
+                                      signup();
+                                    } else {
+                                      Fluttertoast.showToast(
+                                        msg: 'Add required document first',
+                                        backgroundColor: Colors.red[700],
+                                      );
+                                    }
                                   } else {
                                     setState(() {
                                       screenNumber += 1;

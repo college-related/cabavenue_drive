@@ -78,6 +78,8 @@ class UserService {
           vehicleData: jsonDecode(profile.body)["vehicleData"],
           id: jsonDecode(profile.body)["id"],
           area: jsonDecode(profile.body)["area"],
+          documents: jsonDecode(profile.body)["user"]["documents"],
+          profileUrl: jsonDecode(profile.body)["user"]["profileUrl"],
         );
 
         const FlutterSecureStorage().write(
