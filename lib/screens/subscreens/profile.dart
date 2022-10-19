@@ -45,62 +45,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Consumer<ProfileProvider>(
       builder: (context, profile, child) {
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(height: 30.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ProfileImage(url: profile.getUserData.profileUrl),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed('/profile-edit');
-                            },
-                            icon: const Icon(Iconsax.edit),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed('/document-edit');
-                            },
-                            icon: const Icon(Iconsax.document_1),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed('/history');
-                            },
-                            icon: const Icon(Iconsax.archive),
-                          ),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          AuthService().logout(context);
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.redAccent),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(height: 30.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ProfileImage(url: profile.getUserData.profileUrl),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pushNamed('/profile-edit');
+                              },
+                              icon: const Icon(Iconsax.edit),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pushNamed('/document-edit');
+                              },
+                              icon: const Icon(Iconsax.document_1),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed('/history');
+                              },
+                              icon: const Icon(Iconsax.archive),
+                            ),
+                          ],
                         ),
-                        child: const Text('Logout'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const ProfileSectionTitle(title: 'Personal Details'),
-              ProfileSectionBox(type: 'personal', user: profile.getUserData),
-              const ProfileSectionTitle(title: 'Vehicle Details'),
-              ProfileSectionBox(type: 'vehicle', user: profile.getUserData),
-              const ProfileSectionTitle(title: 'Documents'),
-              DocumentSection(documents: profile.getUserData.documents),
-            ],
+                        ElevatedButton(
+                          onPressed: () {
+                            AuthService().logout(context);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.redAccent),
+                          ),
+                          child: const Text('Logout'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const ProfileSectionTitle(title: 'Personal Details'),
+                ProfileSectionBox(type: 'personal', user: profile.getUserData),
+                const ProfileSectionTitle(title: 'Vehicle Details'),
+                ProfileSectionBox(type: 'vehicle', user: profile.getUserData),
+                const ProfileSectionTitle(title: 'Documents'),
+                DocumentSection(
+                  documents: profile.getUserData.documents.isNotEmpty
+                      ? profile.getUserData.documents
+                      : [
+                          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
+                          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
+                          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
+                        ],
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -130,16 +143,12 @@ class ProfileImage extends StatelessWidget {
 
 // ignore: must_be_immutable
 class DocumentSection extends StatelessWidget {
-  DocumentSection({
+  const DocumentSection({
     Key? key,
     required this.documents,
   }) : super(key: key);
 
-  List documents = [
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOqZtyjNtmb04lLYa3b37LViN63p9BzgO8eQ&usqp=CAU',
-  ];
+  final List documents;
 
   @override
   Widget build(BuildContext context) {
