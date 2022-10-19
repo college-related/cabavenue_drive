@@ -26,6 +26,7 @@ dependencies:
   drop_down_list: ^0.0.4
   cloudinary_sdk: ^4.0.2+10
   moment_dart: ^0.10.3
+  liquid_pull_to_refresh: ^3.0.1
 
 dev_dependencies:
   flutter_test:
