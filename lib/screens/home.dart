@@ -43,11 +43,7 @@ class _HomePageState extends State<HomePage> {
           elevation: 1,
         ),
         body: SafeArea(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
-            child: _pages[_currentIndex],
-          ),
+          child: _pages[_currentIndex],
         ),
         bottomNavigationBar: CustomNavigationBar(
           items: [
