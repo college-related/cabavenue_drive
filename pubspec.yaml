@@ -24,6 +24,7 @@ dependencies:
   fluttertoast: ^8.0.9
   provider: ^6.0.4
   drop_down_list: ^0.0.4
+  cloudinary_sdk: ^4.0.2+10
 
 dev_dependencies:
   flutter_test:
