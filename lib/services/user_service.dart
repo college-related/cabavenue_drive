@@ -78,8 +78,8 @@ class UserService {
           vehicleData: jsonDecode(profile.body)["vehicleData"],
           id: jsonDecode(profile.body)["id"],
           area: jsonDecode(profile.body)["area"],
-          documents: jsonDecode(profile.body)["user"]["documents"],
-          profileUrl: jsonDecode(profile.body)["user"]["profileUrl"],
+          documents: jsonDecode(profile.body)["documents"],
+          profileUrl: jsonDecode(profile.body)["profileUrl"],
         );
 
         const FlutterSecureStorage().write(
@@ -92,6 +92,79 @@ class UserService {
 
         Fluttertoast.showToast(
           msg: 'Profile Edited successfully',
+          backgroundColor: Colors.lightGreen[300],
+          textColor: Colors.black87,
+        );
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString(), true);
+    }
+  }
+
+  void updateDocument({
+    required String profileUrl,
+    required List documents,
+    required BuildContext context,
+  }) async {
+    try {
+      String id = await _tokenService.getUserId();
+      String token = await _tokenService.getToken();
+
+      var user = {
+        'profileUrl': profileUrl,
+        'documents': documents,
+      };
+
+      var profile = await http.patch(
+        Uri.parse('http://$url/v1/users/$id'),
+        body: jsonEncode(user),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      ).then((value) {
+        if (value.statusCode == 200) {
+          return value;
+        }
+        if (value.statusCode == 401 &&
+            jsonDecode(value.body)['message'] == 'Please authenticate') {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/auth', (route) => false);
+          showSnackBar(context, 'Session finished, please login again', true);
+        } else {
+          httpErrorHandle(response: value, context: context, onSuccess: () {});
+        }
+      });
+
+      if (profile != null) {
+        String token = await TokenService().getToken();
+
+        UserModel newUser = UserModel(
+          role: jsonDecode(profile.body)["role"],
+          name: jsonDecode(profile.body)["name"],
+          isEmailVerified: jsonDecode(profile.body)["isEmailVerified"],
+          isPhoneVerified: jsonDecode(profile.body)["isPhoneVerified"],
+          email: jsonDecode(profile.body)["email"],
+          phone: jsonDecode(profile.body)["phone"],
+          address: jsonDecode(profile.body)["address"],
+          accessToken: token,
+          vehicleData: jsonDecode(profile.body)["vehicleData"],
+          id: jsonDecode(profile.body)["id"],
+          area: jsonDecode(profile.body)["area"],
+          documents: jsonDecode(profile.body)["documents"],
+          profileUrl: jsonDecode(profile.body)["profileUrl"],
+        );
+
+        const FlutterSecureStorage().write(
+          key: "CABAVENUE_USERDATA",
+          value: UserModel.serialize(newUser),
+        );
+        // ignore: use_build_context_synchronously
+        Provider.of<ProfileProvider>(context, listen: false)
+            .setUserData(newUser);
+
+        Fluttertoast.showToast(
+          msg: 'Document Edited successfully',
           backgroundColor: Colors.lightGreen[300],
           textColor: Colors.black87,
         );

@@ -1,5 +1,6 @@
 import 'package:cabavenue_drive/providers/profile_provider.dart';
 import 'package:cabavenue_drive/screens/auth.dart';
+import 'package:cabavenue_drive/screens/editscreens/document_edit.dart';
 import 'package:cabavenue_drive/screens/editscreens/profile_edit.dart';
 import 'package:cabavenue_drive/screens/home.dart';
 import 'package:cabavenue_drive/screens/splash_screen.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           '/home': (context) => const HomePage(),
           '/auth': (context) => const AuthPage(),
           '/profile-edit': (context) => const ProfileEditPage(),
+          '/document-edit': (context) => const DocumentEdit(),
         },
       ),
     );

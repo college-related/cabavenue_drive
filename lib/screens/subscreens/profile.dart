@@ -67,7 +67,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             icon: const Icon(Iconsax.edit),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('/document-edit');
+                            },
                             icon: const Icon(Iconsax.document_1),
                           ),
                         ],
@@ -149,14 +151,14 @@ class DocumentSection extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            const Text('License'),
+            const Text('Citizenship'),
             const SizedBox(height: 20.0),
             Image.network(
               documents[0],
               height: 200.0,
             ),
             const SizedBox(height: 20.0),
-            const Text('Citizenship'),
+            const Text('License'),
             const SizedBox(height: 20.0),
             Image.network(
               documents[1],
