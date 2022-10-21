@@ -65,57 +65,59 @@ class _DocumentEditState extends State<DocumentEdit> {
   }) async {
     XFile? newImage = await _imagePicker.pickImage(source: ImageSource.gallery);
 
-    try {
-      Fluttertoast.showToast(
-        msg: 'Uploading....',
-        backgroundColor: Colors.orange[700],
-      );
-
-      final cloudinaryResource = CloudinaryUploadResource(
-        filePath: newImage?.path,
-        uploadPreset: '',
-      );
-      CloudinaryResponse response =
-          await cloudinary.uploadResource(cloudinaryResource);
-
-      if (response.isSuccessful && response.secureUrl!.isNotEmpty) {
-        if (!isProfile) {
-          documents[index] = response.secureUrl!;
-        } else {
-          profileUrl = response.secureUrl!;
-        }
+    if (newImage != null) {
+      try {
         Fluttertoast.showToast(
-          msg: 'Upload complete',
-          backgroundColor: Colors.green[700],
+          msg: 'Uploading....',
+          backgroundColor: Colors.orange[700],
         );
 
-        await cloudinary.deleteResource(url: url);
-      } else {
-        Fluttertoast.showToast(
-            msg: 'Error uploading', backgroundColor: Colors.red[600]);
-      }
-    } catch (e) {
-      Fluttertoast.showToast(
-          msg: e.toString(), backgroundColor: Colors.red[600]);
-    }
+        final cloudinaryResource = CloudinaryUploadResource(
+          filePath: newImage.path,
+          uploadPreset: '',
+        );
+        CloudinaryResponse response =
+            await cloudinary.uploadResource(cloudinaryResource);
 
-    setState(() {
-      switch (type) {
-        case 'citizen':
-          citizenship = newImage;
-          break;
-        case 'bluebook':
-          bluebook = newImage;
-          break;
-        case 'license':
-          license = newImage;
-          break;
-        case 'profile':
-          profileImg = newImage;
-          break;
-        default:
+        if (response.isSuccessful && response.secureUrl!.isNotEmpty) {
+          if (!isProfile) {
+            documents[index] = response.secureUrl!;
+          } else {
+            profileUrl = response.secureUrl!;
+          }
+          Fluttertoast.showToast(
+            msg: 'Upload complete',
+            backgroundColor: Colors.green[700],
+          );
+
+          await cloudinary.deleteResource(url: url);
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Error uploading', backgroundColor: Colors.red[600]);
+        }
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: e.toString(), backgroundColor: Colors.red[600]);
       }
-    });
+
+      setState(() {
+        switch (type) {
+          case 'citizen':
+            citizenship = newImage;
+            break;
+          case 'bluebook':
+            bluebook = newImage;
+            break;
+          case 'license':
+            license = newImage;
+            break;
+          case 'profile':
+            profileImg = newImage;
+            break;
+          default:
+        }
+      });
+    }
   }
 
   @override

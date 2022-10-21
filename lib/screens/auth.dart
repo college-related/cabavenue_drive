@@ -120,37 +120,45 @@ class _SignupScreenState extends State<SignupScreen> {
   void pickCitizen() async {
     XFile? citizenImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
-    upload(image: citizenImage);
-    setState(() {
-      citizenship = citizenImage;
-    });
+    if (citizenImage != null) {
+      upload(image: citizenImage);
+      setState(() {
+        citizenship = citizenImage;
+      });
+    }
   }
 
   void pickLicense() async {
     XFile? licenseImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
-    upload(image: licenseImage);
-    setState(() {
-      license = licenseImage;
-    });
+    if (licenseImage != null) {
+      upload(image: licenseImage);
+      setState(() {
+        license = licenseImage;
+      });
+    }
   }
 
   void pickBluebook() async {
     XFile? bluebookImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
-    upload(image: bluebookImage);
-    setState(() {
-      bluebook = bluebookImage;
-    });
+    if (bluebookImage != null) {
+      upload(image: bluebookImage);
+      setState(() {
+        bluebook = bluebookImage;
+      });
+    }
   }
 
   void pickProfile() async {
     XFile? profileImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
-    upload(image: profileImage, isProfile: true);
-    setState(() {
-      profile = profileImage;
-    });
+    if (profileImage != null) {
+      upload(image: profileImage, isProfile: true);
+      setState(() {
+        profile = profileImage;
+      });
+    }
   }
 
   @override
