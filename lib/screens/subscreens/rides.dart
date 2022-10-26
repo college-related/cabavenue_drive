@@ -1,7 +1,10 @@
-import 'dart:math';
+import 'dart:convert';
 
+import 'package:cabavenue_drive/models/ride_model.dart';
+import 'package:cabavenue_drive/services/ride_service.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:moment_dart/moment_dart.dart';
 
 class RideScreen extends StatefulWidget {
   const RideScreen({Key? key}) : super(key: key);
@@ -11,21 +14,22 @@ class RideScreen extends StatefulWidget {
 }
 
 class _RideScreenState extends State<RideScreen> {
-  final bool _hasRideRequests = Random().nextBool();
-  final List _requests = [
-    {
-      "pickup": "Lamachour",
-      "destination": "Mahendrapool",
-      "price": "300",
-      "request-time": "3:00 PM",
-    },
-    {
-      "pickup": "Lamachour",
-      "destination": "Nayabazzar",
-      "price": "400",
-      "request-time": "3:20 PM",
-    },
-  ];
+  late Future<List<RideModel>> requests;
+
+  Future<List<RideModel>> getRides(BuildContext context) async {
+    var rides = await RideService().getRides(context);
+    List<RideModel> reqs = [];
+    for (var ride in rides) {
+      reqs.add(await RideModel.deserialize(jsonEncode(ride).toString()));
+    }
+    return reqs;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    requests = getRides(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,25 +45,194 @@ class _RideScreenState extends State<RideScreen> {
               child:
                   Text('Today', style: Theme.of(context).textTheme.headline1),
             ),
-            !_hasRideRequests
-                ? Column(
-                    children: [
-                      Image.asset(
-                        'assets/images/free-time.png',
-                        height: 300.0,
+            FutureBuilder<List<RideModel>>(
+              future: requests,
+              builder: ((context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.isEmpty) {
+                    return Column(
+                      children: [
+                        Image.asset(
+                          'assets/images/free-time.png',
+                          height: 300.0,
+                        ),
+                        Text(
+                          'No Requests',
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
+                        Text(
+                          'Enjoy the free time you don\'t have any ride request at the moment',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                      ],
+                    );
+                  } else {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 100.0),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(5.0),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: const Offset(
+                                      0, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 20.0),
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(right: 6.0),
+                                          child: Icon(Iconsax.location,
+                                              size: 20.0),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Pickup point',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1,
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.35,
+                                              child: Flexible(
+                                                child: Text(snapshot
+                                                    .data![index]
+                                                    .source['name']),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(right: 6.0),
+                                          child: Icon(Iconsax.location,
+                                              size: 20.0),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Destination',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1,
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.35,
+                                              child: Flexible(
+                                                child: Text(snapshot
+                                                    .data![index]
+                                                    .destination['name']),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      Moment(DateTime.parse(
+                                              snapshot.data![index].createdAt))
+                                          .fromNow(form: UnitStringForm.short),
+                                    ),
+                                    Text(
+                                      "Rs. ${snapshot.data![index].price.toString()}",
+                                      style:
+                                          Theme.of(context).textTheme.headline2,
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          iconSize: 50.0,
+                                          color: Colors.teal,
+                                          onPressed: () {
+                                            showAlertDialog(
+                                                context,
+                                                snapshot.data![index],
+                                                "confirm");
+                                          },
+                                          icon: const Icon(Iconsax.tick_circle),
+                                        ),
+                                        IconButton(
+                                          iconSize: 50.0,
+                                          color: Colors.redAccent,
+                                          onPressed: () {
+                                            showAlertDialog(
+                                                context,
+                                                snapshot.data![index],
+                                                "reject");
+                                          },
+                                          icon:
+                                              const Icon(Iconsax.close_circle),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                      Text(
-                        'No Requests',
-                        style: Theme.of(context).textTheme.headline1,
-                      ),
-                      Text(
-                        'Enjoy the free time you don\'t have any ride request at the moment',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
-                    ],
-                  )
-                : RideRequestCard(requests: _requests),
+                    );
+                  }
+                }
+
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }),
+            ),
           ],
         ),
       ),
@@ -67,144 +240,16 @@ class _RideScreenState extends State<RideScreen> {
   }
 }
 
-class RideRequestCard extends StatefulWidget {
-  const RideRequestCard({
-    Key? key,
-    required this.requests,
-  }) : super(key: key);
-
-  final List requests;
-
-  @override
-  State<RideRequestCard> createState() => _RideRequestCardState();
-}
-
-class _RideRequestCardState extends State<RideRequestCard> {
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: ListView.builder(
-        padding: const EdgeInsets.only(bottom: 100.0),
-        itemCount: widget.requests.length,
-        itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.all(
-                Radius.circular(5.0),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            margin:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 6.0),
-                          child: Icon(Iconsax.location, size: 20.0),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Pickup point',
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
-                            Text(widget.requests[index]['pickup']),
-                          ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 6.0),
-                          child: Icon(Iconsax.location, size: 20.0),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Destination',
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
-                            Text(widget.requests[index]['destination']),
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(widget.requests[index]['request-time']),
-                    Text(
-                      "Rs. ${widget.requests[index]['price']}",
-                      style: Theme.of(context).textTheme.headline2,
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          iconSize: 50.0,
-                          color: Colors.teal,
-                          onPressed: () {
-                            showAlertDialog(
-                                context, widget.requests[index], "confirm");
-                          },
-                          icon: const Icon(Iconsax.tick_circle),
-                        ),
-                        IconButton(
-                          iconSize: 50.0,
-                          color: Colors.redAccent,
-                          onPressed: () {
-                            showAlertDialog(
-                                context, widget.requests[index], "reject");
-                          },
-                          icon: const Icon(Iconsax.close_circle),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
 // show alert dialouge for confirmation of request rides
-showAlertDialog(BuildContext context, request, type) {
+showAlertDialog(BuildContext context, RideModel request, type) {
   // Create yes button
   Widget yesButton = ElevatedButton(
     onPressed: () {
-      // ignore: todo
-      // TODO: Handle accept or reject of ride
+      if (type == 'confirm') {
+        RideService().acceptRequest(context, request.id);
+      } else {
+        RideService().rejectRequest(context, request.id);
+      }
       Navigator.of(context).pop();
     },
     style: ButtonStyle(
@@ -233,73 +278,12 @@ showAlertDialog(BuildContext context, request, type) {
         : const Text("Reject the ride?"),
     content: SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,
-      height: MediaQuery.of(context).size.height * 0.2,
+      height: MediaQuery.of(context).size.height * 0.1,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 6.0),
-                      child: Icon(Iconsax.location, size: 20.0),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Pickup point',
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
-                        Text(request['pickup']),
-                      ],
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 5.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 6.0),
-                      child: Icon(Iconsax.location, size: 20.0),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Destination',
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
-                        Text(request['destination']),
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(request['request-time']),
-                Text(
-                  "Rs. ${request['price']}",
-                  style: Theme.of(context).textTheme.headline2,
-                ),
-              ],
-            ),
-          ],
-        ),
+        child: type == 'confirm'
+            ? const Text('You are going to accept this request!')
+            : const Text('You are going to reject this request!'),
       ),
     ),
     actions: [
