@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "128373757682",
+    "project_id": "cabavenue-784d0",
+    "storage_bucket": "cabavenue-784d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128373757682:android:5536e8243646466439a26b",
+        "android_client_info": {
+          "package_name": "com.example.cabavenue_drive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128373757682-jvdtt5or1l2jr5dmj85qdvtmr2s4q44d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7ap8IDsQCIDpTRBrBGdlF6woWZevlk8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "128373757682-jvdtt5or1l2jr5dmj85qdvtmr2s4q44d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
