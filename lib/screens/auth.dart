@@ -441,14 +441,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text('Log in'),
                     ),
                   ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle:
-                          const TextStyle(fontSize: 15, color: Colors.blue),
-                    ),
-                    onPressed: () {},
-                    child: const Text('Forgot Password?'),
-                  ),
                   RichText(
                       text: TextSpan(children: [
                     const TextSpan(
