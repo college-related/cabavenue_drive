@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cabavenue_drive/models/ride_model.dart';
+import 'package:cabavenue_drive/services/notification_service.dart';
 import 'package:cabavenue_drive/services/ride_service.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -70,9 +71,8 @@ class _RideScreenState extends State<RideScreen> {
                   } else {
                     return SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
+                      height: MediaQuery.of(context).size.height * 0.7,
                       child: ListView.builder(
-                        padding: const EdgeInsets.only(bottom: 100.0),
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                           return Container(
@@ -247,8 +247,20 @@ showAlertDialog(BuildContext context, RideModel request, type) {
     onPressed: () {
       if (type == 'confirm') {
         RideService().acceptRequest(context, request.id);
+        NotificationService().sendRideRequestNotification(
+          context,
+          request.passenger,
+          "Request Accepted",
+          "Your Request has been accepted",
+        );
       } else {
         RideService().rejectRequest(context, request.id);
+        NotificationService().sendRideRequestNotification(
+          context,
+          request.passenger,
+          "Request Cancelled",
+          "Your Request has been cancelled",
+        );
       }
       Navigator.of(context).pop();
     },

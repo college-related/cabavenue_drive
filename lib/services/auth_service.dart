@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cabavenue_drive/helpers/error_handler.dart';
 import 'package:cabavenue_drive/helpers/snackbar.dart';
 import 'package:cabavenue_drive/models/user_model.dart';
+import 'package:cabavenue_drive/providers/device_provider.dart';
 import 'package:cabavenue_drive/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -83,6 +84,7 @@ class AuthService {
             );
             Provider.of<ProfileProvider>(context, listen: false)
                 .setUserData(user);
+            Provider.of<DeviceProvider>(context, listen: false).update(context);
             Fluttertoast.showToast(
               msg: 'Registered successfully',
               backgroundColor: Colors.green,
@@ -142,6 +144,7 @@ class AuthService {
           );
           Provider.of<ProfileProvider>(context, listen: false)
               .setUserData(user);
+          Provider.of<DeviceProvider>(context, listen: false).update(context);
           Fluttertoast.showToast(msg: 'Logged in successfully');
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/home', (route) => false);
@@ -154,6 +157,7 @@ class AuthService {
 
   void logout(context) async {
     const FlutterSecureStorage().delete(key: "CABAVENUE_USERDATA");
+    Provider.of<DeviceProvider>(context, listen: false).deleteDevice(context);
     Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
     Fluttertoast.showToast(
       msg: 'Logged out',
