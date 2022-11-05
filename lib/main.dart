@@ -1,9 +1,11 @@
 import 'package:cabavenue_drive/providers/device_provider.dart';
 import 'package:cabavenue_drive/providers/profile_provider.dart';
+import 'package:cabavenue_drive/providers/ride_request_provider.dart';
 import 'package:cabavenue_drive/screens/auth.dart';
 import 'package:cabavenue_drive/screens/editscreens/document_edit.dart';
 import 'package:cabavenue_drive/screens/editscreens/profile_edit.dart';
 import 'package:cabavenue_drive/screens/home.dart';
+import 'package:cabavenue_drive/screens/in_ride.dart';
 import 'package:cabavenue_drive/screens/ride_history.dart';
 import 'package:cabavenue_drive/screens/splash_screen.dart';
 import 'package:cabavenue_drive/utils/theme.dart';
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => DeviceProvider(context)),
+        ChangeNotifierProvider(create: (context) => RideRequestProvider()),
       ],
       child: MaterialApp(
         title: 'Cabavenue Driver App',
@@ -52,6 +55,7 @@ class MyApp extends StatelessWidget {
           '/profile-edit': (context) => const ProfileEditPage(),
           '/document-edit': (context) => const DocumentEdit(),
           '/history': (context) => const RideHistory(),
+          '/inRide': (context) => const InRidePage(),
         },
       ),
     );

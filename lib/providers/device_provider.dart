@@ -28,8 +28,12 @@ class DeviceProvider with ChangeNotifier {
 
   void deleteDevice(BuildContext context) async {
     DeviceService deviceService = DeviceService();
-    deviceService.deleteDevice(context, device!.firebaseToken);
+    if (device != null) {
+      deviceService.deleteDevice(context, device!.firebaseToken);
+    }
     device = null;
+
+    notifyListeners();
   }
 
   void setDevice(DeviceModel newDevice) {

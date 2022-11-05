@@ -5,6 +5,7 @@ import 'package:cabavenue_drive/helpers/snackbar.dart';
 import 'package:cabavenue_drive/models/user_model.dart';
 import 'package:cabavenue_drive/providers/device_provider.dart';
 import 'package:cabavenue_drive/providers/profile_provider.dart';
+import 'package:cabavenue_drive/providers/ride_request_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -77,6 +78,7 @@ class AuthService {
               documents: jsonDecode(res.body)["user"]["documents"],
               profileUrl: jsonDecode(res.body)["user"]["profileUrl"],
               rideHistory: jsonDecode(res.body)["user"]["rideHistory"],
+              isInRide: jsonDecode(res.body)["user"]["isInRide"],
             );
             const FlutterSecureStorage().write(
               key: "CABAVENUE_USERDATA",
@@ -137,6 +139,7 @@ class AuthService {
             documents: jsonDecode(res.body)["user"]["documents"],
             profileUrl: jsonDecode(res.body)["user"]["profileUrl"],
             rideHistory: jsonDecode(res.body)["user"]["rideHistory"],
+            isInRide: jsonDecode(res.body)["user"]["isInRide"],
           );
           const FlutterSecureStorage().write(
             key: "CABAVENUE_USERDATA",
@@ -146,8 +149,13 @@ class AuthService {
               .setUserData(user);
           Provider.of<DeviceProvider>(context, listen: false).update(context);
           Fluttertoast.showToast(msg: 'Logged in successfully');
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil('/home', (route) => false);
+          if (jsonDecode(res.body)["user"]["isInRide"]) {
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/inRide', (route) => false);
+          } else {
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/home', (route) => false);
+          }
         },
       );
     } catch (e) {
@@ -158,6 +166,8 @@ class AuthService {
   void logout(context) async {
     const FlutterSecureStorage().delete(key: "CABAVENUE_USERDATA");
     Provider.of<DeviceProvider>(context, listen: false).deleteDevice(context);
+    Provider.of<RideRequestProvider>(context, listen: false)
+        .setRideRequestListData([]);
     Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
     Fluttertoast.showToast(
       msg: 'Logged out',

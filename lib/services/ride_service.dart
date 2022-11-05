@@ -12,13 +12,13 @@ class RideService {
   String? url = dotenv.env['BACKEND_URL_WITH_PORT'];
   final TokenService _tokenService = TokenService();
 
-  dynamic getRides(BuildContext context) async {
+  dynamic getRides(BuildContext context, String? filter) async {
     String token = await _tokenService.getToken();
     String id = await _tokenService.getUserId();
 
     try {
-      var places = await http.get(
-        Uri.parse('http://$url/v1/rides/my/$id'),
+      var rides = await http.get(
+        Uri.parse('http://$url/v1/rides/my/$id?filter=$filter'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -32,7 +32,7 @@ class RideService {
         }
       });
 
-      return places;
+      return rides;
     } catch (e) {
       // ignore: use_build_context_synchronously
       showSnackBar(context, e.toString(), true);
@@ -90,6 +90,37 @@ class RideService {
     } catch (e) {
       // ignore: use_build_context_synchronously
       showSnackBar(context, e.toString(), true);
+    }
+  }
+
+  dynamic completeRide(
+    BuildContext context,
+    String id,
+  ) async {
+    String token = await _tokenService.getToken();
+
+    try {
+      var rides = await http.patch(
+        Uri.parse('http://$url/v1/rides/$id'),
+        body: jsonEncode({"status": "completed"}),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      ).then((value) {
+        if (value.statusCode == 200) {
+          return jsonDecode(value.body);
+        } else {
+          httpErrorHandle(response: value, context: context, onSuccess: () {});
+          return [];
+        }
+      });
+
+      return rides;
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showSnackBar(context, e.toString(), true);
+      return [];
     }
   }
 }

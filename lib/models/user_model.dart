@@ -14,6 +14,7 @@ class UserModel {
   dynamic area;
   List documents;
   String profileUrl;
+  bool isInRide;
   List? rideHistory = [];
 
   UserModel({
@@ -30,6 +31,7 @@ class UserModel {
     required this.area,
     required this.documents,
     required this.profileUrl,
+    required this.isInRide,
     this.rideHistory,
   });
 
@@ -49,6 +51,7 @@ class UserModel {
       documents: jsonData['documents'],
       profileUrl: jsonData['profileUrl'],
       rideHistory: jsonData['rideHistory'],
+      isInRide: jsonData['isInRide'],
     );
   }
 
@@ -67,6 +70,7 @@ class UserModel {
         'documents': model.documents,
         'profileUrl': model.profileUrl,
         'rideHistory': model.rideHistory,
+        'isInRide': model.isInRide,
       };
 
   static String serialize(UserModel model) =>

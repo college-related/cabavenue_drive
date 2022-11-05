@@ -19,7 +19,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     /**
      * Add user data from localstorage to provider
      */
-    UserModel oldUser = ProfileProvider().getUserData;
+    UserModel oldUser =
+        Provider.of<ProfileProvider>(context, listen: false).getUserData;
 
     if (oldUser.accessToken == '') {
       var u =

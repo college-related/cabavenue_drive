@@ -29,12 +29,18 @@ class ProfileProvider with ChangeNotifier {
     profileUrl:
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
     rideHistory: [],
+    isInRide: false,
   );
 
   UserModel get getUserData => user;
 
   void setUserData(UserModel newUser) {
     user = newUser;
+    notifyListeners();
+  }
+
+  void setInRide(bool inRide) {
+    user.isInRide = inRide;
     notifyListeners();
   }
 }

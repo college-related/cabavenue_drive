@@ -80,6 +80,7 @@ class UserService {
           area: jsonDecode(profile.body)["area"],
           documents: jsonDecode(profile.body)["documents"],
           profileUrl: jsonDecode(profile.body)["profileUrl"],
+          isInRide: jsonDecode(profile.body)["isInRide"],
         );
 
         const FlutterSecureStorage().write(
@@ -153,6 +154,7 @@ class UserService {
           area: jsonDecode(profile.body)["area"],
           documents: jsonDecode(profile.body)["documents"],
           profileUrl: jsonDecode(profile.body)["profileUrl"],
+          isInRide: jsonDecode(profile.body)["isInRide"],
         );
 
         const FlutterSecureStorage().write(
@@ -172,5 +174,17 @@ class UserService {
     } catch (e) {
       showSnackBar(context, e.toString(), true);
     }
+  }
+
+  Future<void> setInRide(bool inRide) async {
+    FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
+    var u = await flutterSecureStorage.read(key: "CABAVENUE_USERDATA");
+
+    var user = UserModel.deserializeFast(u ?? '{}');
+
+    user.isInRide = inRide;
+
+    await flutterSecureStorage.write(
+        key: "CABAVENUE_USERDATA", value: UserModel.serialize(user));
   }
 }

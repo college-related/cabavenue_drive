@@ -1,3 +1,4 @@
+import 'package:cabavenue_drive/providers/ride_request_provider.dart';
 import 'package:cabavenue_drive/screens/subscreens/dashboard.dart';
 import 'package:cabavenue_drive/screens/subscreens/profile.dart';
 import 'package:cabavenue_drive/screens/subscreens/rides.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 
 late AndroidNotificationChannel channel;
 
@@ -69,7 +71,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  bool _showBadge = false;
   final List _pages = const [
     DashboardScreen(),
     RideScreen(),
@@ -86,14 +87,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      Navigator.pushNamed(context, '/home');
-      setState(() {
-        _currentIndex = 1;
-        _showBadge = true;
-      });
+      Navigator.pushNamed(context, '/');
     });
   }
 
@@ -123,7 +121,12 @@ class _HomePageState extends State<HomePage> {
             CustomNavigationBarItem(
               icon: const Icon(Iconsax.smart_car),
               selectedIcon: const Icon(Iconsax.smart_car5),
-              showBadge: _showBadge,
+              showBadge: Provider.of<RideRequestProvider>(context)
+                  .getRideRequestListData
+                  .isNotEmpty,
+              badgeCount: Provider.of<RideRequestProvider>(context)
+                  .getRideRequestListData
+                  .length,
             ),
             CustomNavigationBarItem(
               icon: const Icon(Iconsax.personalcard),
