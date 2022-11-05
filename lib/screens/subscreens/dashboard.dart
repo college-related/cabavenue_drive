@@ -1,11 +1,8 @@
 import 'package:cabavenue_drive/models/dashboard_model.dart';
-import 'package:cabavenue_drive/models/ride_model.dart';
-import 'package:cabavenue_drive/providers/ride_request_provider.dart';
 import 'package:cabavenue_drive/services/dashboard_service.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -28,20 +25,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     dashReport = getDashReport(context);
-    getRideRequest();
   }
 
   Future<void> _refreshDashboard() async {
     setState(() {
       dashReport = getDashReport(context);
     });
-  }
-
-  getRideRequest() async {
-    if (Provider.of<RideRequestProvider>(context, listen: false)
-        .getIsRideRequestFetching) {
-      await RideModel.getRequestRides(context, filter: "onlyNew");
-    }
   }
 
   @override

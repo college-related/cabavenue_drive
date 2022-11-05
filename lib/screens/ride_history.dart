@@ -86,7 +86,14 @@ class _RideHistoryState extends State<RideHistory> {
                                                 .textTheme
                                                 .subtitle1,
                                           ),
-                                          Text(history[index]['source']),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.35,
+                                            child:
+                                                Text(history[index]['source']),
+                                          ),
                                         ],
                                       )
                                     ],
@@ -115,7 +122,14 @@ class _RideHistoryState extends State<RideHistory> {
                                                 .textTheme
                                                 .subtitle1,
                                           ),
-                                          Text(history[index]['destination']),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.35,
+                                            child: Text(
+                                                history[index]['destination']),
+                                          ),
                                         ],
                                       )
                                     ],

@@ -43,4 +43,9 @@ class ProfileProvider with ChangeNotifier {
     user.isInRide = inRide;
     notifyListeners();
   }
+
+  void setRideHistory(rideHistory) {
+    user.rideHistory = rideHistory;
+    notifyListeners();
+  }
 }

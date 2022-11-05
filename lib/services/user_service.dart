@@ -187,4 +187,16 @@ class UserService {
     await flutterSecureStorage.write(
         key: "CABAVENUE_USERDATA", value: UserModel.serialize(user));
   }
+
+  Future<void> setRideHistory(rideHistory) async {
+    FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
+    var u = await flutterSecureStorage.read(key: "CABAVENUE_USERDATA");
+
+    var user = UserModel.deserializeFast(u ?? '{}');
+
+    user.rideHistory = rideHistory;
+
+    await flutterSecureStorage.write(
+        key: "CABAVENUE_USERDATA", value: UserModel.serialize(user));
+  }
 }

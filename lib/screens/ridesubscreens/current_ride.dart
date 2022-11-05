@@ -28,6 +28,13 @@ class _CurrentRideScreenState extends State<CurrentRideScreen> {
         context, userId, "Ride Completed", "Your ride is completed");
   }
 
+  Future<void> updateRideHistory() async {
+    var rideHistory = await RideService().getRideHistory(context);
+    UserService().setRideHistory(rideHistory);
+    Provider.of<ProfileProvider>(context, listen: false)
+        .setRideHistory(rideHistory);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -113,16 +120,18 @@ class _CurrentRideScreenState extends State<CurrentRideScreen> {
                                       value.getRideIndex ?? 0]
                                   .passenger,
                             ).then((val) {
-                              Provider.of<RideRequestProvider>(context,
-                                      listen: false)
-                                  .removeRideRequestFromList(
-                                      value.getRideIndex ?? 0);
-                              Provider.of<ProfileProvider>(context,
-                                      listen: false)
-                                  .setInRide(false);
-                              UserService().setInRide(false);
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/home', (route) => false);
+                              updateRideHistory().then((va) {
+                                Provider.of<RideRequestProvider>(context,
+                                        listen: false)
+                                    .removeRideRequestFromList(
+                                        value.getRideIndex ?? 0);
+                                Provider.of<ProfileProvider>(context,
+                                        listen: false)
+                                    .setInRide(false);
+                                UserService().setInRide(false);
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    '/home', (route) => false);
+                              });
                             });
                           },
                           child: Row(

@@ -123,4 +123,32 @@ class RideService {
       return [];
     }
   }
+
+  dynamic getRideHistory(BuildContext context) async {
+    String token = await _tokenService.getToken();
+    String id = await _tokenService.getUserId();
+
+    try {
+      var rideHistories = await http.get(
+        Uri.parse('http://$url/v1/users/history/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      ).then((value) {
+        if (value.statusCode == 200) {
+          return jsonDecode(value.body);
+        } else {
+          httpErrorHandle(response: value, context: context, onSuccess: () {});
+          return [];
+        }
+      });
+
+      return rideHistories;
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showSnackBar(context, e.toString(), true);
+      return [];
+    }
+  }
 }
