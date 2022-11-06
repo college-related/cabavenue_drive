@@ -1,3 +1,4 @@
+import 'package:cabavenue_drive/models/ride_model.dart';
 import 'package:cabavenue_drive/providers/ride_request_provider.dart';
 import 'package:cabavenue_drive/screens/subscreens/dashboard.dart';
 import 'package:cabavenue_drive/screens/subscreens/profile.dart';
@@ -55,7 +56,7 @@ void showFlutterNotification(RemoteMessage message) {
           channel.id,
           channel.name,
           channelDescription: channel.description,
-          icon: 'launch_background',
+          icon: '@mipmap/ic_launcher',
         ),
       ),
     );
@@ -88,10 +89,32 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    FirebaseMessaging.onMessage.listen(showFlutterNotification);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      handleNotification(message);
+    });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      Navigator.pushNamed(context, '/');
+      handleNotification(message);
+    });
+  }
+
+  handleNotification(RemoteMessage message) async {
+    if (message.notification!.title == 'You got a rating') {
+      Fluttertoast.showToast(
+        msg: 'You got a rating from recent ride',
+        backgroundColor: Colors.green[500],
+      );
+      return;
+    }
+    if (message.notification!.title != 'New ride request') {
+      Fluttertoast.showToast(
+        msg: 'A ride request has been cancelled',
+        backgroundColor: Colors.red[500],
+      );
+    }
+    RideModel.getRequestRides(context, filter: "onlyNew");
+    setState(() {
+      _currentIndex = 1;
     });
   }
 

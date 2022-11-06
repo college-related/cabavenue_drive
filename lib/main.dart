@@ -18,7 +18,6 @@ import 'package:provider/provider.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   await setupFlutterNotifications();
-  showFlutterNotification(message);
 }
 
 Future main() async {
