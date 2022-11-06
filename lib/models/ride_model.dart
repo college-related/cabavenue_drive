@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class RideModel {
   dynamic source;
   dynamic destination;
-  int price;
+  double price;
   String driver;
   String passenger;
   String id;

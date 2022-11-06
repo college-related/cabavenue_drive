@@ -202,7 +202,7 @@ class _RideScreenState extends State<RideScreen> {
                                                 form: UnitStringForm.short),
                                       ),
                                       Text(
-                                        "Rs. ${value.getRideRequestListData[index].price.toString()}",
+                                        "Rs. ${num.parse(value.getRideRequestListData[index].price.toString()).toStringAsFixed(2)}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline2,
