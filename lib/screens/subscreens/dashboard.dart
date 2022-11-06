@@ -73,7 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           DashboardDataContainer(
                             color: const Color(0xffD0EAF9),
                             value:
-                                'Rs. ${snapshot.data!.totalEarnings.toString()}',
+                                'Rs. ${num.parse(snapshot.data!.totalEarnings.toString()).toStringAsFixed(2)}',
                             title: 'Total Earnings',
                             icon: Iconsax.money_recive,
                           ),
@@ -112,7 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           DashboardDataContainer(
                             color: const Color(0xffF8A8A9),
                             value:
-                                'Rs. ${snapshot.data!.totalsToday["totalEarnings"].toString()}',
+                                'Rs. ${num.parse(snapshot.data!.totalsToday["totalEarnings"].toString()).toStringAsFixed(2)}',
                             title: 'Total Earnings',
                             icon: Iconsax.money_recive,
                           ),
