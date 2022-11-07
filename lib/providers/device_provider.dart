@@ -51,7 +51,7 @@ class DeviceProvider with ChangeNotifier {
       device = DeviceModel.deserializeFast(fromServer!.toString());
     } else {
       device = await DeviceModel.deserialize(
-          await deviceService.createNew(context, firebaseToken));
+          deviceService.createNew(context, firebaseToken).toString());
     }
     notifyListeners();
     await FirebaseMessaging.instance.requestPermission(
