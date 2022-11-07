@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:convert';
 
 import 'package:cabavenue_drive/helpers/error_handler.dart';
@@ -6,10 +8,12 @@ import 'package:cabavenue_drive/services/token_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 
 class RideService {
   String? url = dotenv.env['BACKEND_URL_WITH_PORT'];
+  String? api = dotenv.env['PLACES_API_GEOAPIFY'];
   final TokenService _tokenService = TokenService();
 
   dynamic getRides(BuildContext context, String? filter) async {
@@ -150,5 +154,35 @@ class RideService {
       showSnackBar(context, e.toString(), true);
       return [];
     }
+  }
+
+  Future<List<LatLng>> getRoutingPolyPoint(
+    BuildContext context,
+    startLat,
+    startLng,
+    desLat,
+    desLng,
+  ) async {
+    List<LatLng> polys = [];
+    try {
+      await http
+          .get(
+        Uri.parse(
+            'https://api.geoapify.com/v1/routing?waypoints=$startLat,$startLng|$desLat,$desLng&mode=drive&apiKey=$api'),
+      )
+          .then((value) {
+        if (value.statusCode == 200) {
+          var latlngs = jsonDecode(value.body)["features"][0]["geometry"]
+              ["coordinates"][0];
+
+          for (var element in latlngs) {
+            polys.add(LatLng(element[1], element[0]));
+          }
+        }
+      });
+    } catch (e) {
+      showSnackBar(context, e.toString(), true);
+    }
+    return polys;
   }
 }

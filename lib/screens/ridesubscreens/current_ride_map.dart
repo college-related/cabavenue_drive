@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:cabavenue_drive/providers/ride_request_provider.dart';
+import 'package:cabavenue_drive/services/ride_service.dart';
 // import 'package:cabavenue_drive/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -29,6 +30,30 @@ class _CurrentRideMapScreenState extends State<CurrentRideMapScreen> {
   // dynamic destinationLocation;
   List drivers = [];
   String price = '';
+  List<Polyline> polylines = [];
+
+  getRoutePolylinePoints(startLat, startLng, desLat, desLng) async {
+    var points = await RideService().getRoutingPolyPoint(
+      context,
+      startLat,
+      startLng,
+      desLat,
+      desLng,
+    );
+    polylines.add(Polyline(
+      points: points,
+      color: Colors.purpleAccent,
+      strokeWidth: 5,
+    ));
+    _mapController.move(
+      LatLng(
+        currentLocation?.latitude ?? 28.2624061,
+        currentLocation?.longitude ?? 83.9687894,
+      ),
+      16,
+    );
+    setState(() {});
+  }
 
   void getCurrentLocation() async {
     Location location = Location();
@@ -54,6 +79,16 @@ class _CurrentRideMapScreenState extends State<CurrentRideMapScreen> {
     super.initState();
 
     getInitialLocation();
+    getCurrentLocation();
+    var value = Provider.of<RideRequestProvider>(context, listen: false);
+    getRoutePolylinePoints(
+      value.getRideRequestListData[value.rideIndex ?? 0].source['latitude'],
+      value.getRideRequestListData[value.rideIndex ?? 0].source['longitude'],
+      value
+          .getRideRequestListData[value.rideIndex ?? 0].destination['latitude'],
+      value.getRideRequestListData[value.rideIndex ?? 0]
+          .destination['longitude'],
+    );
   }
 
   @override
@@ -99,10 +134,14 @@ class _CurrentRideMapScreenState extends State<CurrentRideMapScreen> {
           ),
           layers: [
             VectorTileLayerOptions(
-                theme: _mapTheme(context),
-                tileProviders: TileProviders({
-                  'openmaptiles': _cachingTileProvider(_urlTemplate()),
-                })),
+              theme: _mapTheme(context),
+              tileProviders: TileProviders({
+                'openmaptiles': _cachingTileProvider(_urlTemplate()),
+              }),
+            ),
+            PolylineLayerOptions(
+              polylines: polylines,
+            ),
             MarkerLayerOptions(
               markers: [
                 Marker(
@@ -126,6 +165,43 @@ class _CurrentRideMapScreenState extends State<CurrentRideMapScreen> {
                     ],
                   ),
                 ),
+                value.getRideRequestListData[value.rideIndex ?? 0].source !=
+                        null
+                    ? Marker(
+                        width: 20.0,
+                        height: 20.0,
+                        point: LatLng(
+                          value.getRideRequestListData[value.rideIndex ?? 0]
+                              .source['latitude'],
+                          value.getRideRequestListData[value.rideIndex ?? 0]
+                              .source['longitude'],
+                        ),
+                        builder: (ctx) => Icon(
+                          Iconsax.location5,
+                          size: 22,
+                          color: Colors.blue[600],
+                          shadows: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 8,
+                              blurRadius: 10,
+                              offset: const Offset(2, 5),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Marker(
+                        width: 0.0,
+                        height: 0.0,
+                        point: LatLng(
+                          28.223877,
+                          83.987730,
+                        ),
+                        builder: (ctx) => const Icon(
+                          Iconsax.gps5,
+                          size: 0,
+                        ),
+                      ),
                 value.getRideRequestListData[value.rideIndex ?? 0]
                             .destination !=
                         null
@@ -159,18 +235,9 @@ class _CurrentRideMapScreenState extends State<CurrentRideMapScreen> {
                           28.223877,
                           83.987730,
                         ),
-                        builder: (ctx) => Icon(
+                        builder: (ctx) => const Icon(
                           Iconsax.gps5,
                           size: 0,
-                          color: Colors.black,
-                          shadows: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 8,
-                              blurRadius: 10,
-                              offset: const Offset(2, 5),
-                            ),
-                          ],
                         ),
                       ),
               ],
