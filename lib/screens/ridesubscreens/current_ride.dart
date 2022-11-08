@@ -90,7 +90,7 @@ class _CurrentRideScreenState extends State<CurrentRideScreen> {
                               style: Theme.of(context).textTheme.subtitle2,
                             ),
                             Text(
-                              'Rs. ${value.getRideRequestListData[value.rideIndex ?? 0].price.toString()}',
+                              'Rs. ${num.parse(value.getRideRequestListData[value.rideIndex ?? 0].price.toString()).toStringAsFixed(2)}',
                               style: Theme.of(context).textTheme.subtitle1,
                             ),
                           ],

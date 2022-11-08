@@ -35,7 +35,7 @@ class _RideHistoryState extends State<RideHistory> {
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.95,
+                    height: MediaQuery.of(context).size.height * 0.8,
                     child: ListView.builder(
                       itemCount: history!.length,
                       itemBuilder: (context, index) {
@@ -144,7 +144,7 @@ class _RideHistoryState extends State<RideHistory> {
                                         .fromNow(form: UnitStringForm.short),
                                   ),
                                   Text(
-                                    "Rs. ${history[index]['price']}",
+                                    "Rs. ${num.parse(history[index]['price'].toString()).toStringAsFixed(2)}",
                                     style:
                                         Theme.of(context).textTheme.headline2,
                                   ),

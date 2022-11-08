@@ -58,11 +58,13 @@ class DeviceService {
     }
   }
 
-  dynamic updateDevice(BuildContext context, String id) async {
+  dynamic updateDevice(
+    BuildContext context,
+    String id,
+    String userId,
+    String access,
+  ) async {
     try {
-      String? token = await _tokenService.getToken();
-      String? userId = await _tokenService.getUserId();
-
       var device = {
         'user': userId,
       };
@@ -72,7 +74,7 @@ class DeviceService {
         body: jsonEncode(device),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $access',
         },
       ).then((value) {
         if (value.statusCode == 200) {
@@ -113,7 +115,7 @@ class DeviceService {
               .pushNamedAndRemoveUntil('/auth', (route) => false);
           showSnackBar(context, 'Session finished, please login again', true);
         }
-        if (value.statusCode != 200 || value.statusCode != 204) {
+        if (value.statusCode != 204) {
           httpErrorHandle(response: value, context: context, onSuccess: () {});
         }
       });

@@ -80,13 +80,17 @@ class AuthService {
               rideHistory: jsonDecode(res.body)["user"]["rideHistory"],
               isInRide: jsonDecode(res.body)["user"]["isInRide"],
             );
+            Provider.of<DeviceProvider>(context, listen: false).update(
+              context,
+              user.id,
+              user.accessToken,
+            );
             const FlutterSecureStorage().write(
               key: "CABAVENUE_USERDATA",
               value: UserModel.serialize(user),
             );
             Provider.of<ProfileProvider>(context, listen: false)
                 .setUserData(user);
-            Provider.of<DeviceProvider>(context, listen: false).update(context);
             Fluttertoast.showToast(
               msg: 'Registered successfully',
               backgroundColor: Colors.green,
@@ -141,13 +145,17 @@ class AuthService {
             rideHistory: jsonDecode(res.body)["user"]["rideHistory"],
             isInRide: jsonDecode(res.body)["user"]["isInRide"],
           );
+          Provider.of<DeviceProvider>(context, listen: false).update(
+            context,
+            user.id,
+            user.accessToken,
+          );
           const FlutterSecureStorage().write(
             key: "CABAVENUE_USERDATA",
             value: UserModel.serialize(user),
           );
           Provider.of<ProfileProvider>(context, listen: false)
               .setUserData(user);
-          Provider.of<DeviceProvider>(context, listen: false).update(context);
           Fluttertoast.showToast(msg: 'Logged in successfully');
           if (jsonDecode(res.body)["user"]["isInRide"]) {
             Navigator.of(context)
@@ -164,8 +172,8 @@ class AuthService {
   }
 
   void logout(context) async {
-    const FlutterSecureStorage().delete(key: "CABAVENUE_USERDATA");
     Provider.of<DeviceProvider>(context, listen: false).deleteDevice(context);
+    const FlutterSecureStorage().delete(key: "CABAVENUE_USERDATA");
     Provider.of<RideRequestProvider>(context, listen: false)
         .setRideRequestListData([]);
     Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);

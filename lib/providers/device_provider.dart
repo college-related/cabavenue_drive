@@ -18,10 +18,17 @@ class DeviceProvider with ChangeNotifier {
     await initFirebaseApp(context);
   }
 
-  void update(BuildContext context) async {
+  void update(BuildContext context, String userId, String accessToken) async {
     DeviceService deviceService = DeviceService();
-    var fromServer = await deviceService.updateDevice(context, device!.id);
-    device = DeviceModel.deserializeFast(fromServer.toString());
+    if (device != null) {
+      var fromServer = await deviceService.updateDevice(
+        context,
+        device!.id,
+        userId,
+        accessToken,
+      );
+      device = await DeviceModel.deserialize(fromServer.toString());
+    }
 
     notifyListeners();
   }
@@ -31,8 +38,6 @@ class DeviceProvider with ChangeNotifier {
     if (device != null) {
       deviceService.deleteDevice(context, device!.firebaseToken);
     }
-    device = null;
-
     notifyListeners();
   }
 

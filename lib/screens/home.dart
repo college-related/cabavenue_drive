@@ -99,17 +99,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   handleNotification(RemoteMessage message) async {
-    if (message.notification!.title == 'You got a rating') {
+    if (message.notification!.title == 'Rating') {
       Fluttertoast.showToast(
         msg: 'You got a rating from recent ride',
         backgroundColor: Colors.green[500],
       );
       return;
     }
-    if (message.notification!.title != 'New ride request') {
+    if (message.notification!.title == 'Ride request cancel') {
       Fluttertoast.showToast(
         msg: 'A ride request has been cancelled',
         backgroundColor: Colors.red[500],
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: 'New ride request',
+        backgroundColor: Colors.green[500],
       );
     }
     RideModel.getRequestRides(context, filter: "onlyNew");
