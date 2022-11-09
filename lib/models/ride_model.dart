@@ -65,10 +65,14 @@ class RideModel {
       BuildContext context, String filter) async {
     var rides = await RideService().getRides(context, filter);
     List<RideModel> reqs = [];
-    for (var ride in rides) {
-      reqs.add(await RideModel.deserialize(jsonEncode(ride).toString()));
+    if (rides != null) {
+      for (var ride in rides) {
+        reqs.add(await RideModel.deserialize(jsonEncode(ride).toString()));
+      }
+      return reqs;
     }
-    return reqs;
+
+    return Future.delayed(const Duration(seconds: 1), () => reqs);
   }
 
   static Future<void> getRequestRides(BuildContext context,

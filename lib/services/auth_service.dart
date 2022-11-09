@@ -4,6 +4,7 @@ import 'package:cabavenue_drive/helpers/error_handler.dart';
 import 'package:cabavenue_drive/helpers/snackbar.dart';
 import 'package:cabavenue_drive/models/user_model.dart';
 import 'package:cabavenue_drive/providers/device_provider.dart';
+import 'package:cabavenue_drive/providers/disable_provider.dart';
 import 'package:cabavenue_drive/providers/profile_provider.dart';
 import 'package:cabavenue_drive/providers/ride_request_provider.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +96,8 @@ class AuthService {
               msg: 'Registered successfully',
               backgroundColor: Colors.green,
             );
+            Provider.of<DisableProvider>(context, listen: false)
+                .setIsDisabled(false);
             Navigator.of(context)
                 .pushNamedAndRemoveUntil('/home', (route) => false);
           },
@@ -156,6 +159,8 @@ class AuthService {
           );
           Provider.of<ProfileProvider>(context, listen: false)
               .setUserData(user);
+          Provider.of<DisableProvider>(context, listen: false)
+              .setIsDisabled(false);
           Fluttertoast.showToast(msg: 'Logged in successfully');
           if (jsonDecode(res.body)["user"]["isInRide"]) {
             Navigator.of(context)

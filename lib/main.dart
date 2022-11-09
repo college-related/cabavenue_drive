@@ -1,4 +1,5 @@
 import 'package:cabavenue_drive/providers/device_provider.dart';
+import 'package:cabavenue_drive/providers/disable_provider.dart';
 import 'package:cabavenue_drive/providers/profile_provider.dart';
 import 'package:cabavenue_drive/providers/ride_request_provider.dart';
 import 'package:cabavenue_drive/screens/auth.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => DeviceProvider(context)),
         ChangeNotifierProvider(create: (context) => RideRequestProvider()),
+        ChangeNotifierProvider(create: (context) => DisableProvider()),
       ],
       child: MaterialApp(
         title: 'Cabavenue Driver App',

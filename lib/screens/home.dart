@@ -1,4 +1,5 @@
 import 'package:cabavenue_drive/models/ride_model.dart';
+import 'package:cabavenue_drive/providers/disable_provider.dart';
 import 'package:cabavenue_drive/providers/ride_request_provider.dart';
 import 'package:cabavenue_drive/screens/subscreens/dashboard.dart';
 import 'package:cabavenue_drive/screens/subscreens/profile.dart';
@@ -117,7 +118,9 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.green[500],
       );
     }
-    RideModel.getRequestRides(context, filter: "onlyNew");
+    if (!Provider.of<DisableProvider>(context, listen: false).getIsDisabled) {
+      RideModel.getRequestRides(context, filter: "onlyNew");
+    }
     setState(() {
       _currentIndex = 1;
     });

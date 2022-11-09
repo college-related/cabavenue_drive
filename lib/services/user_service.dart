@@ -52,12 +52,6 @@ class UserService {
       ).then((value) {
         if (value.statusCode == 200) {
           return value;
-        }
-        if (value.statusCode == 401 &&
-            jsonDecode(value.body)['message'] == 'Please authenticate') {
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil('/auth', (route) => false);
-          showSnackBar(context, 'Session finished, please login again', true);
         } else {
           httpErrorHandle(response: value, context: context, onSuccess: () {});
         }
@@ -126,12 +120,6 @@ class UserService {
       ).then((value) {
         if (value.statusCode == 200) {
           return value;
-        }
-        if (value.statusCode == 401 &&
-            jsonDecode(value.body)['message'] == 'Please authenticate') {
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil('/auth', (route) => false);
-          showSnackBar(context, 'Session finished, please login again', true);
         } else {
           httpErrorHandle(response: value, context: context, onSuccess: () {});
         }

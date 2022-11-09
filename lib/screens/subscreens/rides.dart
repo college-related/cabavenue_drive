@@ -1,4 +1,5 @@
 import 'package:cabavenue_drive/models/ride_model.dart';
+import 'package:cabavenue_drive/providers/disable_provider.dart';
 import 'package:cabavenue_drive/providers/profile_provider.dart';
 import 'package:cabavenue_drive/providers/ride_request_provider.dart';
 import 'package:cabavenue_drive/services/notification_service.dart';
@@ -25,8 +26,9 @@ class _RideScreenState extends State<RideScreen> {
   void initState() {
     super.initState();
     if (Provider.of<RideRequestProvider>(context, listen: false)
-        .getRideRequestListData
-        .isEmpty) {
+            .getRideRequestListData
+            .isEmpty &&
+        !Provider.of<DisableProvider>(context, listen: false).getIsDisabled) {
       RideModel.getRequestRides(context, filter: "newOnly");
     }
   }

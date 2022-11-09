@@ -1,8 +1,10 @@
 import 'package:cabavenue_drive/models/dashboard_model.dart';
+import 'package:cabavenue_drive/providers/disable_provider.dart';
 import 'package:cabavenue_drive/services/dashboard_service.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -18,13 +20,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<DashboardModel> getDashReport(BuildContext context) async {
     var data = await DashboardService().getDashboardReport(context);
+    if (data == null) {
+      return Future.delayed(const Duration(seconds: 1), () {
+        return DashboardModel(
+          totalRides: 0,
+          totalEarnings: 0,
+          totalRating: 0,
+          totalsToday: {
+            "totalRides": 0,
+            "totalEarnings": 0,
+          },
+        );
+      });
+    }
     return DashboardModel.deserialize(data.toString());
   }
 
   @override
   void initState() {
     super.initState();
-    dashReport = getDashReport(context);
+    if (!Provider.of<DisableProvider>(context, listen: false).getIsDisabled) {
+      dashReport = getDashReport(context);
+    }
   }
 
   Future<void> _refreshDashboard() async {

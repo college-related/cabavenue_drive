@@ -32,7 +32,7 @@ class RideService {
           return jsonDecode(value.body);
         } else {
           httpErrorHandle(response: value, context: context, onSuccess: () {});
-          return [];
+          return null;
         }
       });
 
@@ -40,7 +40,7 @@ class RideService {
     } catch (e) {
       // ignore: use_build_context_synchronously
       showSnackBar(context, e.toString(), true);
-      return [];
+      return null;
     }
   }
 
@@ -63,7 +63,7 @@ class RideService {
           return jsonDecode(value.body);
         } else {
           httpErrorHandle(response: value, context: context, onSuccess: () {});
-          return [];
+          return null;
         }
       });
 
@@ -71,7 +71,7 @@ class RideService {
     } catch (e) {
       // ignore: use_build_context_synchronously
       showSnackBar(context, e.toString(), true);
-      return [];
+      return null;
     }
   }
 
@@ -89,7 +89,11 @@ class RideService {
           'Authorization': 'Bearer $token',
         },
       ).then((value) {
-        Fluttertoast.showToast(msg: 'Rejected ride');
+        if (value.statusCode != 204) {
+          httpErrorHandle(response: value, context: context, onSuccess: () {});
+        } else {
+          Fluttertoast.showToast(msg: 'Rejected ride');
+        }
       });
     } catch (e) {
       // ignore: use_build_context_synchronously
@@ -116,7 +120,7 @@ class RideService {
           return jsonDecode(value.body);
         } else {
           httpErrorHandle(response: value, context: context, onSuccess: () {});
-          return [];
+          return null;
         }
       });
 
@@ -124,7 +128,7 @@ class RideService {
     } catch (e) {
       // ignore: use_build_context_synchronously
       showSnackBar(context, e.toString(), true);
-      return [];
+      return null;
     }
   }
 
