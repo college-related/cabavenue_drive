@@ -15,6 +15,7 @@ class UserModel {
   List documents;
   String profileUrl;
   bool isInRide;
+  bool provideEmergencyService;
   List? rideHistory = [];
 
   UserModel({
@@ -32,6 +33,7 @@ class UserModel {
     required this.documents,
     required this.profileUrl,
     required this.isInRide,
+    required this.provideEmergencyService,
     this.rideHistory,
   });
 
@@ -52,6 +54,7 @@ class UserModel {
       profileUrl: jsonData['profileUrl'],
       rideHistory: jsonData['rideHistory'],
       isInRide: jsonData['isInRide'],
+      provideEmergencyService: jsonData['provideEmergencyService'],
     );
   }
 
@@ -71,6 +74,7 @@ class UserModel {
         'profileUrl': model.profileUrl,
         'rideHistory': model.rideHistory,
         'isInRide': model.isInRide,
+        'provideEmergencyService': model.provideEmergencyService,
       };
 
   static String serialize(UserModel model) =>

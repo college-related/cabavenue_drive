@@ -21,6 +21,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   final TextEditingController _brandcontroller = TextEditingController();
   final TextEditingController _colorcontroller = TextEditingController();
   final TextEditingController _platecontroller = TextEditingController();
+  bool provideEmergencyService = false;
   final _profileEditKey = GlobalKey<FormState>();
   final UserService _userService = UserService();
 
@@ -38,6 +39,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     _brandcontroller.text = user.vehicleData['model'].toString();
     _colorcontroller.text = user.vehicleData['color'].toString();
     _platecontroller.text = user.vehicleData['plateNumber'].toString();
+    provideEmergencyService = user.provideEmergencyService;
   }
 
   @override
@@ -112,6 +114,31 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     icon: Iconsax.money,
                     borderType: 'full',
                   ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 5,
+                    ),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Provide emergency service',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Switch(
+                          value: provideEmergencyService,
+                          onChanged: (val) {
+                            setState(() {
+                              provideEmergencyService = val;
+                            });
+                          },
+                        )
+                      ],
+                    ),
+                  ),
                   Container(
                     margin: const EdgeInsets.only(top: 30.0),
                     width: MediaQuery.of(context).size.width * 0.8,
@@ -124,14 +151,16 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                         if (_profileEditKey.currentState!.validate()) {
                           setState(() {
                             _userService.editProfile(
-                                name: _namecontroller.text,
-                                email: _emailcontroller.text,
-                                phone: _phonecontroller.text,
-                                address: _addresscontroller.text,
-                                plateNumber: _platecontroller.text,
-                                model: _brandcontroller.text,
-                                color: _colorcontroller.text,
-                                context: context);
+                              name: _namecontroller.text,
+                              email: _emailcontroller.text,
+                              phone: _phonecontroller.text,
+                              address: _addresscontroller.text,
+                              plateNumber: _platecontroller.text,
+                              model: _brandcontroller.text,
+                              color: _colorcontroller.text,
+                              provideEmergencyService: provideEmergencyService,
+                              context: context,
+                            );
                           });
                         }
                       },

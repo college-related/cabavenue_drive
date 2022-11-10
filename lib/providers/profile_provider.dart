@@ -17,10 +17,7 @@ class ProfileProvider with ChangeNotifier {
       'plateNumber': '',
     },
     id: '',
-    area: {
-      'id': '',
-      'name': '',
-    },
+    area: '',
     documents: [
       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
@@ -30,6 +27,7 @@ class ProfileProvider with ChangeNotifier {
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
     rideHistory: [],
     isInRide: false,
+    provideEmergencyService: false,
   );
 
   UserModel get getUserData => user;

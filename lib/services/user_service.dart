@@ -24,6 +24,7 @@ class UserService {
     required String plateNumber,
     required String model,
     required String color,
+    required bool provideEmergencyService,
     required BuildContext context,
   }) async {
     try {
@@ -40,6 +41,7 @@ class UserService {
           'color': color,
           'model': model,
         },
+        'provideEmergencyService': provideEmergencyService,
       };
 
       var profile = await http.patch(
@@ -75,6 +77,8 @@ class UserService {
           documents: jsonDecode(profile.body)["documents"],
           profileUrl: jsonDecode(profile.body)["profileUrl"],
           isInRide: jsonDecode(profile.body)["isInRide"],
+          provideEmergencyService:
+              jsonDecode(profile.body)["provideEmergencyService"],
         );
 
         const FlutterSecureStorage().write(
@@ -143,6 +147,8 @@ class UserService {
           documents: jsonDecode(profile.body)["documents"],
           profileUrl: jsonDecode(profile.body)["profileUrl"],
           isInRide: jsonDecode(profile.body)["isInRide"],
+          provideEmergencyService:
+              jsonDecode(profile.body)["provideEmergencyService"],
         );
 
         const FlutterSecureStorage().write(
