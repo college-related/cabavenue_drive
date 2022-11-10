@@ -45,7 +45,7 @@ class UserService {
       };
 
       var profile = await http.patch(
-        Uri.parse('http://$url/v1/users/$id'),
+        Uri.parse('$url/v1/users/$id'),
         body: jsonEncode(user),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -79,6 +79,7 @@ class UserService {
           isInRide: jsonDecode(profile.body)["isInRide"],
           provideEmergencyService:
               jsonDecode(profile.body)["provideEmergencyService"],
+          rideHistory: jsonDecode(profile.body)["rideHistory"],
         );
 
         const FlutterSecureStorage().write(
@@ -115,7 +116,7 @@ class UserService {
       };
 
       var profile = await http.patch(
-        Uri.parse('http://$url/v1/users/$id'),
+        Uri.parse('$url/v1/users/$id'),
         body: jsonEncode(user),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -149,6 +150,7 @@ class UserService {
           isInRide: jsonDecode(profile.body)["isInRide"],
           provideEmergencyService:
               jsonDecode(profile.body)["provideEmergencyService"],
+          rideHistory: jsonDecode(profile.body)["rideHistory"],
         );
 
         const FlutterSecureStorage().write(

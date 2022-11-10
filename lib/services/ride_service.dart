@@ -22,7 +22,7 @@ class RideService {
 
     try {
       var rides = await http.get(
-        Uri.parse('http://$url/v1/rides/my/$id?filter=$filter'),
+        Uri.parse('$url/v1/rides/my/$id?filter=$filter'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -52,7 +52,7 @@ class RideService {
 
     try {
       var places = await http.patch(
-        Uri.parse('http://$url/v1/rides/$id'),
+        Uri.parse('$url/v1/rides/$id'),
         body: jsonEncode({"status": "accepted"}),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -83,7 +83,7 @@ class RideService {
 
     try {
       await http.delete(
-        Uri.parse('http://$url/v1/rides/$id'),
+        Uri.parse('$url/v1/rides/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -109,7 +109,7 @@ class RideService {
 
     try {
       var rides = await http.patch(
-        Uri.parse('http://$url/v1/rides/$id'),
+        Uri.parse('$url/v1/rides/$id'),
         body: jsonEncode({"status": "completed"}),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -138,7 +138,7 @@ class RideService {
 
     try {
       var rideHistories = await http.get(
-        Uri.parse('http://$url/v1/users/history/$id'),
+        Uri.parse('$url/v1/users/history/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',

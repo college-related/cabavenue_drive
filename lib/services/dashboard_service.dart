@@ -14,7 +14,7 @@ class DashboardService {
       String id = await _tokenService.getUserId();
       String token = await _tokenService.getToken();
       var dashboard = await http.get(
-        Uri.parse('http://$url/v1/users/dashboard/$id'),
+        Uri.parse('$url/v1/users/dashboard/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',

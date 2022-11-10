@@ -12,7 +12,7 @@ class AreaServices {
   dynamic getAreas(BuildContext context) async {
     try {
       List area = await http.get(
-        Uri.parse('http://$url/v1/areas'),
+        Uri.parse('$url/v1/areas'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
