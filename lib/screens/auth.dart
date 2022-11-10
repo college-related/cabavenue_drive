@@ -61,6 +61,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _plateController = TextEditingController();
   final TextEditingController _areaIDController = TextEditingController();
   final TextEditingController _areaNameController = TextEditingController();
+  bool provideEmergencyService = false;
 
   final AuthService _authService = AuthService();
 
@@ -161,6 +162,12 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
+  void changeProvideEmergencyService() {
+    setState(() {
+      provideEmergencyService = !provideEmergencyService;
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -193,6 +200,7 @@ class _SignupScreenState extends State<SignupScreen> {
         areaName: _areaNameController.text,
         documents: imageUrls,
         profileUrl: profileUrl,
+        provideEmergencyService: provideEmergencyService,
       );
     } else {
       setState(() {
@@ -259,6 +267,9 @@ class _SignupScreenState extends State<SignupScreen> {
                               plateController: _plateController,
                               areaIDController: _areaIDController,
                               areaNameController: _areaNameController,
+                              provideEmergencyService: provideEmergencyService,
+                              provideEmergencyServiceCallback:
+                                  changeProvideEmergencyService,
                             )
                           : ThirdScreen(
                               pickCitizen: pickCitizen,

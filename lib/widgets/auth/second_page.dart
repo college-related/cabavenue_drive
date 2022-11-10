@@ -13,6 +13,8 @@ class SecondScreen extends StatefulWidget {
     required this.plateController,
     required this.areaIDController,
     required this.areaNameController,
+    required this.provideEmergencyService,
+    required this.provideEmergencyServiceCallback,
   }) : super(key: key);
 
   final TextEditingController modelController;
@@ -20,6 +22,8 @@ class SecondScreen extends StatefulWidget {
   final TextEditingController plateController;
   final TextEditingController areaIDController;
   final TextEditingController areaNameController;
+  final bool provideEmergencyService;
+  final Function provideEmergencyServiceCallback;
 
   @override
   State<SecondScreen> createState() => _SecondScreenState();
@@ -105,6 +109,28 @@ class _SecondScreenState extends State<SecondScreen> {
             _areaFocus.unfocus();
             onTextFieldTap();
           },
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Row(
+            children: [
+              const Text(
+                'Provide Emergency Service?',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+              ),
+              Switch(
+                value: widget.provideEmergencyService,
+                onChanged: (val) {
+                  setState(() {
+                    widget.provideEmergencyServiceCallback();
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ],
     );

@@ -30,6 +30,7 @@ class AuthService {
     required String areaName,
     required List<String> documents,
     required String profileUrl,
+    required bool provideEmergencyService,
     required BuildContext context,
   }) async {
     try {
@@ -45,12 +46,10 @@ class AuthService {
           'model': model,
         },
         'role': 'driver',
-        'area': {
-          'id': areaId,
-          'name': areaName,
-        },
+        'area': areaId,
         'documents': documents,
         'profileUrl': profileUrl,
+        'provideEmergencyService': provideEmergencyService,
       };
 
       await http.post(
@@ -80,6 +79,8 @@ class AuthService {
               profileUrl: jsonDecode(res.body)["user"]["profileUrl"],
               rideHistory: jsonDecode(res.body)["user"]["rideHistory"],
               isInRide: jsonDecode(res.body)["user"]["isInRide"],
+              provideEmergencyService: jsonDecode(res.body)["user"]
+                  ["provideEmergencyService"],
             );
             Provider.of<DeviceProvider>(context, listen: false).update(
               context,
@@ -147,6 +148,8 @@ class AuthService {
             profileUrl: jsonDecode(res.body)["user"]["profileUrl"],
             rideHistory: jsonDecode(res.body)["user"]["rideHistory"],
             isInRide: jsonDecode(res.body)["user"]["isInRide"],
+            provideEmergencyService: jsonDecode(res.body)["user"]
+                ["provideEmergencyService"],
           );
           Provider.of<DeviceProvider>(context, listen: false).update(
             context,
